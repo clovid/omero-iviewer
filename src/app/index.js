@@ -114,6 +114,34 @@ export class Index  {
                         "If you leave you'll lose your changes.";
             return null;
         };
+
+        let clovidTarget;
+        if (window !== window.parent) {
+            const messageContext = 'clovid_integration';
+            window.addEventListener('message', event => {
+                if (!event.data || !event.data.context || event.data.context !== messageContext) {
+                    return;
+                }
+                const clovidMessage = event.data
+                console.log('handle clovidMessage', clovidMessage);
+                if (clovidMessage.type === 'event') {
+                    switch (clovidMessage.name) {
+                        case 'initialized':
+                            console.log('initialization complete');
+                            clovidTarget = event.source;
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            })
+            parent.postMessage({
+                context: messageContext,
+                type: 'event',
+                name: 'initialized',
+            }, '*')
+        }
         // register resize and collapse handlers
         Ui.registerSidePanelHandlers(
             this.context.eventbus,
