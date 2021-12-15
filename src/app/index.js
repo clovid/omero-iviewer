@@ -31,8 +31,40 @@ import Misc from '../utils/misc';
 import OpenWith from '../utils/openwith';
 import Ui from '../utils/ui';
 import {PLUGIN_PREFIX, SYNC_LOCK, WEBGATEWAY} from '../utils/constants';
-import {IMAGE_VIEWER_RESIZE, IMAGE_VIEWER_CONTROLS_VISIBILITY,
-        REGIONS_STORE_SHAPES, REGIONS_STORED_SHAPES} from '../events/events';
+import {
+    IMAGE_SETTINGS_REFRESH,
+    IMAGE_CANVAS_DATA,
+    IMAGE_INTENSITY_QUERYING,
+    IMAGE_VIEWER_CONTROLS_VISIBILITY,
+    IMAGE_VIEWER_RESIZE,
+    IMAGE_VIEWER_INTERACTION,
+    IMAGE_SETTINGS_CHANGE,
+    VIEWER_PROJECTIONS_SYNC,
+    IMAGE_DIMENSION_CHANGE,
+    IMAGE_COMMENT_CHANGE,
+    IMAGE_DIMENSION_PLAY,
+    IMAGE_VIEWPORT_CAPTURE,
+    IMAGE_VIEWPORT_LINK,
+    REGIONS_SET_PROPERTY,
+    REGIONS_PROPERTY_CHANGED,
+    REGIONS_DRAW_SHAPE,
+    REGIONS_SHAPE_GENERATED,
+    REGIONS_CHANGE_MODES,
+    REGIONS_SHOW_COMMENTS,
+    ENABLE_SHAPE_POPUP,
+    REGIONS_GENERATE_SHAPES,
+    REGIONS_STORE_SHAPES,
+    REGIONS_STORED_SHAPES,
+    REGIONS_MODIFY_SHAPES,
+    VIEWER_IMAGE_SETTINGS,
+    VIEWER_SET_SYNC_GROUP,
+    REGIONS_HISTORY_ENTRY,
+    REGIONS_HISTORY_ACTION,
+    REGIONS_COPY_SHAPES,
+    HISTOGRAM_RANGE_UPDATE,
+    THUMBNAILS_UPDATE,
+    SAVE_ACTIVE_IMAGE_SETTINGS,
+} from '../events/events';
 
 /**
  * @classdesc
@@ -114,34 +146,11 @@ export class Index  {
                         "If you leave you'll lose your changes.";
             return null;
         };
-
-        let clovidTarget;
+        // TODO: refactor
         if (window !== window.parent) {
-            const messageContext = 'clovid_integration';
-            window.addEventListener('message', event => {
-                if (!event.data || !event.data.context || event.data.context !== messageContext) {
-                    return;
-                }
-                const clovidMessage = event.data
-                console.log('handle clovidMessage', clovidMessage);
-                if (clovidMessage.type === 'event') {
-                    switch (clovidMessage.name) {
-                        case 'initialized':
-                            console.log('initialization complete');
-                            clovidTarget = event.source;
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-            })
-            parent.postMessage({
-                context: messageContext,
-                type: 'event',
-                name: 'initialized',
-            }, '*')
+            this.handleIframeConnection()
         }
+
         // register resize and collapse handlers
         Ui.registerSidePanelHandlers(
             this.context.eventbus,
@@ -316,5 +325,85 @@ export class Index  {
                 document['on'
                     + this.full_screen_api_prefix + 'fullscreenchange'] = null;
         }
+    }
+
+    handleIframeConnection() {
+        let iframeTarget;
+        const messageContext = 'clovid_integration'; // shared "secret"
+        window.addEventListener('message', event => {
+            if (!event.data || !event.data.context || event.data.context !== messageContext) {
+                return;
+            }
+            const parentMessage = event.data
+            console.log('handle message from parent', parentMessage);
+            if (parentMessage.type === 'event') {
+                switch (parentMessage.name) {
+                    case 'initialized':
+                        console.log('initialization between parent and iframe complete');
+                        iframeTarget = event.source;
+                        this.initIframeSubscriptions(messageContext, iframeTarget)
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        })
+        parent.postMessage({
+            context: messageContext,
+            type: 'event',
+            name: 'handshake',
+        }, '*')
+    }
+
+    initIframeSubscriptions(messageContext, iframeTarget) {
+        [
+            IMAGE_SETTINGS_REFRESH,
+            IMAGE_CANVAS_DATA,
+            IMAGE_INTENSITY_QUERYING,
+            IMAGE_VIEWER_CONTROLS_VISIBILITY,
+            IMAGE_VIEWER_RESIZE,
+            IMAGE_VIEWER_INTERACTION,
+            IMAGE_SETTINGS_CHANGE,
+            VIEWER_PROJECTIONS_SYNC,
+            IMAGE_DIMENSION_CHANGE,
+            IMAGE_COMMENT_CHANGE,
+            IMAGE_DIMENSION_PLAY,
+            IMAGE_VIEWPORT_CAPTURE,
+            IMAGE_VIEWPORT_LINK,
+            REGIONS_SET_PROPERTY,
+            REGIONS_PROPERTY_CHANGED,
+            REGIONS_DRAW_SHAPE,
+            REGIONS_SHAPE_GENERATED,
+            REGIONS_CHANGE_MODES,
+            REGIONS_SHOW_COMMENTS,
+            ENABLE_SHAPE_POPUP,
+            REGIONS_GENERATE_SHAPES,
+            REGIONS_STORE_SHAPES,
+            REGIONS_STORED_SHAPES,
+            REGIONS_MODIFY_SHAPES,
+            VIEWER_IMAGE_SETTINGS,
+            VIEWER_SET_SYNC_GROUP,
+            REGIONS_HISTORY_ENTRY,
+            REGIONS_HISTORY_ACTION,
+            REGIONS_COPY_SHAPES,
+            HISTOGRAM_RANGE_UPDATE,
+            THUMBNAILS_UPDATE,
+            SAVE_ACTIVE_IMAGE_SETTINGS,
+        ].forEach(event =>
+            this.context.eventbus.subscribe(
+                event,
+                params => {
+                    iframeTarget.postMessage({
+                        context: messageContext,
+                        type: 'event',
+                        name: event,
+                        params,
+                    }, '*')
+                }
+            )
+        )
+
+
     }
 }
