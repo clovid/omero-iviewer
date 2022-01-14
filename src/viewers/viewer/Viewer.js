@@ -67,6 +67,7 @@ import {integrateStyleIntoJsonObject,
 import OmeroImage from './source/Image';
 import Regions from './source/Regions';
 import Mask from './geom/Mask';
+import { VIEWER_SET_REGIONS_VISIBILITY } from '../../events/events'
 
 /**
  * @classdesc
@@ -113,7 +114,7 @@ class Viewer extends OlObject {
     * @param {Object.<string, *>=} options additional properties (optional)
     */
     constructor(id, options) {
-    
+
         super();
 
         var opts = options || {};
@@ -354,8 +355,16 @@ class Viewer extends OlObject {
             sendRequest(reqParams);
         };
 
+        const initSubscriptions = () => {
+            this.eventbus_.subscribe(
+                VIEWER_SET_REGIONS_VISIBILITY,
+                (params={}) => {
+                    this.setRegionsVisibility(...params.args)
+            });
+        }
+
         // execute initialization function
-        this.initialize_();
+        this.initialize_(initSubscriptions);
     }
 
     /**

@@ -81,6 +81,9 @@ export const THUMBNAILS_UPDATE = "THUMBNAILS_UPDATE";
 /** whenever the presently active image settings should be saved */
 export const SAVE_ACTIVE_IMAGE_SETTINGS = "SAVE_ACTIVE_IMAGE_SETTINGS";
 
+export const VIEWER_SET_REGIONS_VISIBILITY = "VIEWER_SET_REGIONS_VISIBILITY";
+export const UI_MODIFY = "UI_MODIFY";
+
 /**
  * Facilitates recurring event subscription
  * by providing subscribe and unsubscribe methods so that any class

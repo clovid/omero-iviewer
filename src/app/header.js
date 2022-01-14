@@ -27,7 +27,7 @@ import {IMAGE_VIEWPORT_CAPTURE} from '../events/events';
 import {
     APP_TITLE, CSV_LINE_BREAK, INITIAL_TYPES, IVIEWER, PROJECTION, WEBCLIENT
 } from '../utils/constants';
-import { IMAGE_VIEWER_RESIZE } from '../events/events';
+import { IMAGE_VIEWER_RESIZE, UI_MODIFY } from '../events/events';
 
 /**
  * @classdesc
@@ -97,6 +97,17 @@ export class Header {
         $('.fixed-header .dropdown').on(
             'show.bs.dropdown', () =>
                 this.checkIfAnyImageSettingsHasBeenModified());
+        // TODO(Clovid) refactor
+        this.context.eventbus.subscribe(UI_MODIFY, params => {
+            if (params.subject === 'header_actions') {
+                if (params.action === 'hide') {
+                    $('.fixed-header .dropdown').hide();
+                }
+                if (params.action === 'show') {
+                    $('.fixed-header .dropdown').show();
+                }
+            }
+        });
     }
 
     /**

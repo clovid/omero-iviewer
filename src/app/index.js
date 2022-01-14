@@ -64,6 +64,8 @@ import {
     HISTOGRAM_RANGE_UPDATE,
     THUMBNAILS_UPDATE,
     SAVE_ACTIVE_IMAGE_SETTINGS,
+    VIEWER_SET_REGIONS_VISIBILITY,
+    UI_MODIFY,
 } from '../events/events';
 
 /**
@@ -146,11 +148,10 @@ export class Index  {
                         "If you leave you'll lose your changes.";
             return null;
         };
-        // TODO: refactor
+        // TODO(Clovid): refactor
         if (window !== window.parent) {
             this.handleIframeConnection()
         }
-
         // register resize and collapse handlers
         Ui.registerSidePanelHandlers(
             this.context.eventbus,
@@ -342,6 +343,22 @@ export class Index  {
                         console.log('initialization between parent and iframe complete');
                         iframeTarget = event.source;
                         this.initIframeSubscriptions(messageContext, iframeTarget)
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            if (parentMessage.type === 'action') {
+                switch (parentMessage.name) {
+                    case 'hide_all_annotations':
+                        this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [false]})
+                        break;
+                    case 'show_all_annotations':
+                        this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [true]})
+                        break;
+                    case 'hide_header_actions':
+                        this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'hide'})
                         break;
 
                     default:
