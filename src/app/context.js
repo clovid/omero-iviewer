@@ -60,6 +60,13 @@ export default class Context {
      */
     version = "0.0.0";
 
+    /*
+     * id of the VQuest viewport that this iViewer belongs to
+     * @memberof Context
+     * @type {string}
+     */
+    vqvpid = "";
+
     /**
      * are we running within the wepback dev server
      *
@@ -450,6 +457,7 @@ export default class Context {
                 this.initParams[REQUEST_PARAMS.INTERPOLATE].toLowerCase() : 'true';
         this.interpolate = (interpolate === 'true');
         this.version = this.getInitialRequestParam(REQUEST_PARAMS.VERSION);
+        this.vqvpid = this.getInitialRequestParam("VQVPID");
         this.roi_page_size = this.initParams[REQUEST_PARAMS.ROI_PAGE_SIZE] || 500;
         this.max_projection_bytes = parseInt(this.initParams[REQUEST_PARAMS.MAX_PROJECTION_BYTES], 10)
                                     || (1024 * 1024 * 256);

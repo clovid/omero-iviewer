@@ -28,6 +28,12 @@
       <link rel="stylesheet" type="text/css" href="css/app.css" />
 
       <script type="text/javascript">
+
+      function get(name){
+        if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+        return decodeURIComponent(name[1]);
+      }
+
         // modify according to your needs
         // in particular: choose an existing id !
         window.INITIAL_REQUEST_PARAMS = {
@@ -35,8 +41,9 @@
                 'WEB_API_BASE': 'api/v0/',
                 'ROI_PAGE_SIZE': '500',
                 'MAX_PROJECTION_BYTES': "268435456", // 1024 * 1024 * 256
-                'IMAGES': "51",   // "4420" // "73537",
-                // 'DATASET': "1",
+                'IMAGES': "3",   // "4420" // "73537",
+                'DATASET': "4",
+                'VQVPID': get('VQVPID')
                 //'WELL': "1"
         };
         // check if we need to log in
@@ -47,7 +54,7 @@
             if (this.readyState == 4 && this.status == 200) {
                 if (xhttp.responseText !== 'OK') {
                     window.location.replace(
-                        'http://localhost:8080/webclient/login?url=http://localhost:8080/');
+                        'https://172.52.0.100:8080/webclient/login?url=https://172.52.0.100:8080/');
                 }
                 return;
             } else if (this.readyState == 4) {

@@ -107,6 +107,14 @@ export class Index  {
     ];
 
     /**
+     * randomly generated id for this viewer. Used in VQuest to
+     * target this viewer when multiple are in use
+     * @memberof Index
+     * @type {string}
+     */
+    my_id = '';
+
+    /**
      * @constructor
      * @param {Context} context the application context
      */
@@ -332,7 +340,7 @@ export class Index  {
         let iframeTarget;
         const messageContext = 'clovid_integration'; // shared "secret"
         window.addEventListener('message', event => {
-            if (!event.data || !event.data.context || event.data.context !== messageContext) {
+            if (!event.data || !event.data.context || event.data.context !== messageContext || event.data.target !== this.my_id) {
                 return;
             }
             const parentMessage = event.data
@@ -344,7 +352,33 @@ export class Index  {
                         iframeTarget = event.source;
                         this.initIframeSubscriptions(messageContext, iframeTarget)
                         break;
-
+                    case 'prepare':
+                        // Request the ROI data for this image and let it propagate through the framework
+                        this.context.getSelectedImageConfig().regions_info.requestData();
+                        break;
+                    case 'newPoint':
+                        // Create a new annotation (currently an ellipse)
+                        let id =  this.context.getSelectedImageConfig().regions_info.image_info.config_id;
+                        let hist_id = this.context.getSelectedImageConfig().regions_info.history.getHistoryId();
+                        this.context.publish(REGIONS_DRAW_SHAPE,
+                          { config_id: id,
+                            abort: false,
+                            hist_id: hist_id,
+                            roi_id: this.context.getSelectedImageConfig().regions_info.getNewRegionsId(),
+                            shape: {
+                               type: "ellipse",
+                               StrokeColor: -65281,
+                               FillColor: -256,
+                               "StrokeWidth": {
+                                  "@type": "TBD#LengthI",
+                                  "Unit": "PIXEL",
+                                  "Symbol": "pixel",
+                                  "Value": 1
+                               } 
+                            }
+                          }
+                        );
+                       break;
                     default:
                         break;
                 }
@@ -366,10 +400,17 @@ export class Index  {
                 }
             }
         })
+        var typedArray = new Uint8Array(10);
+        crypto.getRandomValues(typedArray);
+        for (var i=0; i<10; i++)
+        {
+          this.my_id += typedArray[i].toString(0xF);
+        }
         parent.postMessage({
             context: messageContext,
             type: 'event',
             name: 'handshake',
+            params: { 'iviewerid': this.my_id, 'vqvpid': this.context.vqvpid}
         }, '*')
     }
 
