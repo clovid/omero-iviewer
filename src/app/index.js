@@ -357,6 +357,7 @@ export class Index  {
                         this.context.getSelectedImageConfig().regions_info.requestData();
                         break;
                     case 'newPoint':
+                      {
                         // Create a new annotation (currently an ellipse)
                         let id =  this.context.getSelectedImageConfig().regions_info.image_info.config_id;
                         let hist_id = this.context.getSelectedImageConfig().regions_info.history.getHistoryId();
@@ -378,7 +379,17 @@ export class Index  {
                             }
                           }
                         );
-                       break;
+                      }
+                      break;
+                    case 'savePoint':
+                      {
+                        let id = this.context.getSelectedImageConfig().regions_info.image_info.config_id;
+                        this.context.publish(REGIONS_STORE_SHAPES,
+                          {
+                            config_id: id
+                          });
+                      }
+                      break;
                     default:
                         break;
                 }
