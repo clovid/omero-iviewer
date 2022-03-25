@@ -1,3 +1,13 @@
+0.11.3 (March 2022)
+------------------
+
+- Make app compatible with Django 1.11.x and 3.2.x ([#456](https://github.com/ome/omero-iviewer/pull/399))
+
+0.11.2 (March 2022)
+-------------------
+
+- Pin omero-web version to 5.14.0 [#403](https://github.com/ome/omero-iviewer/pull/403)
+
 0.11.1 (July 2021)
 ------------------
 
