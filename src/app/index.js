@@ -65,6 +65,7 @@ import {
     THUMBNAILS_UPDATE,
     SAVE_ACTIVE_IMAGE_SETTINGS,
     VIEWER_SET_REGIONS_VISIBILITY,
+    VIEWER_REMOVE_INTERACTION_OR_CONTROL,
     UI_MODIFY,
 } from '../events/events';
 
@@ -351,6 +352,9 @@ export class Index  {
                         console.log('initialization between parent and iframe complete');
                         iframeTarget = event.source;
                         this.initIframeSubscriptions(messageContext, iframeTarget)
+                        this.context.publish(UI_MODIFY, {subject: 'sidebar_right', action: 'toggle'})
+                        this.context.publish(UI_MODIFY, {subject: 'header', action: 'hide'})
+                        setTimeout(() => this.context.publish(VIEWER_REMOVE_INTERACTION_OR_CONTROL, {args: ['fullscreen']}), 100);
                         break;
                     case 'prepare':
                         // Request the ROI data for this image and let it propagate through the framework
