@@ -67,6 +67,7 @@ import {
     VIEWER_SET_REGIONS_VISIBILITY,
     VIEWER_REMOVE_INTERACTION_OR_CONTROL,
     VIEWER_SET_SHAPE_POPUP_VISIBILITY,
+    VIEWER_INITALIZED,
     UI_MODIFY,
 } from '../events/events';
 
@@ -356,10 +357,6 @@ export class Index  {
                         this.context.publish(UI_MODIFY, {subject: 'sidebar_left', action: 'toggle'})
                         this.context.publish(UI_MODIFY, {subject: 'sidebar_right', action: 'toggle'})
                         this.context.publish(UI_MODIFY, {subject: 'header', action: 'hide'})
-                        setTimeout(() => {
-                            this.context.publish(VIEWER_REMOVE_INTERACTION_OR_CONTROL, {args: ['fullscreen']});
-                            this.context.publish(VIEWER_SET_SHAPE_POPUP_VISIBILITY, false);
-                        }, 100);
                         break;
                     case 'prepare':
                         // Request the ROI data for this image and let it propagate through the framework
@@ -491,6 +488,12 @@ export class Index  {
             )
         )
 
-
+        this.context.eventbus.subscribe(
+            VIEWER_INITALIZED,
+            () => {
+                this.context.publish(VIEWER_REMOVE_INTERACTION_OR_CONTROL, {args: ['fullscreen']});
+                this.context.publish(VIEWER_SET_SHAPE_POPUP_VISIBILITY, false);
+            }
+        );
     }
 }

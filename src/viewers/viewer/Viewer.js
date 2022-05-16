@@ -71,6 +71,7 @@ import {
     VIEWER_SET_REGIONS_VISIBILITY,
     VIEWER_REMOVE_INTERACTION_OR_CONTROL,
     VIEWER_SET_SHAPE_POPUP_VISIBILITY,
+    VIEWER_INITALIZED,
 } from '../../events/events'
 
 /**
@@ -375,7 +376,9 @@ class Viewer extends OlObject {
                 (flag) => {
                     this.enableShapePopup(flag)
             });
-
+            this.eventbus_.publish(
+                VIEWER_INITALIZED
+            );
         }
 
         // execute initialization function
