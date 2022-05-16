@@ -375,7 +375,7 @@ export class Index  {
                                   "Unit": "PIXEL",
                                   "Symbol": "pixel",
                                   "Value": 1
-                               } 
+                               }
                             }
                           }
                         );
@@ -404,6 +404,15 @@ export class Index  {
                         break;
                     case 'hide_header_actions':
                         this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'hide'})
+                        break;
+                    case 'show_header_actions':
+                        this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'show'})
+                        break;
+                    case 'hide_navbar':
+                        this.context.publish(UI_MODIFY, {subject: 'header', action: 'hide'})
+                        break;
+                    case 'show_navbar':
+                        this.context.publish(UI_MODIFY, {subject: 'header', action: 'show'})
                         break;
 
                     default:

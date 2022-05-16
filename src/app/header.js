@@ -99,13 +99,33 @@ export class Header {
                 this.checkIfAnyImageSettingsHasBeenModified());
         // TODO(Clovid) refactor
         this.context.eventbus.subscribe(UI_MODIFY, params => {
-            if (params.subject === 'header_actions') {
-                if (params.action === 'hide') {
-                    $('.fixed-header .dropdown').hide();
-                }
-                if (params.action === 'show') {
-                    $('.fixed-header .dropdown').show();
-                }
+            switch (params.subject) {
+                case 'header_actions':
+                    if (params.action === 'hide') {
+                        $('.fixed-header .dropdown').hide();
+                    }
+                    if (params.action === 'show') {
+                        $('.fixed-header .dropdown').show();
+                    }
+                    break;
+
+                case 'header':
+                    if (params.action === 'hide') {
+                        $('.fixed-header').hide();
+                        $('.center').css('padding-top', 0);
+                    }
+                    if (params.action === 'show') {
+                        $('.center').css('padding-top', '');
+                        $('.fixed-header').show();
+                    }
+
+                case 'sidebar_right':
+                    if (params.action === 'toggle') {
+                        $('.collapse-right').trigger('click')
+                    }
+
+                default:
+                    break;
             }
         });
     }
