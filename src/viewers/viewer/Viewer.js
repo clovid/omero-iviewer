@@ -69,7 +69,8 @@ import Regions from './source/Regions';
 import Mask from './geom/Mask';
 import {
     VIEWER_SET_REGIONS_VISIBILITY,
-    VIEWER_REMOVE_INTERACTION_OR_CONTROL
+    VIEWER_REMOVE_INTERACTION_OR_CONTROL,
+    VIEWER_SET_SHAPE_POPUP_VISIBILITY,
 } from '../../events/events'
 
 /**
@@ -367,9 +368,14 @@ class Viewer extends OlObject {
             this.eventbus_.subscribe(
                 VIEWER_REMOVE_INTERACTION_OR_CONTROL,
                 (params={}) => {
-                    console.log('VIEWER_REMOVE_INTERACTION_OR_CONTROL', params)
                     this.removeInteractionOrControl(...params.args)
             });
+            this.eventbus_.subscribe(
+                VIEWER_SET_SHAPE_POPUP_VISIBILITY,
+                (flag) => {
+                    this.enableShapePopup(flag)
+            });
+
         }
 
         // execute initialization function

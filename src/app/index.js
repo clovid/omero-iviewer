@@ -66,6 +66,7 @@ import {
     SAVE_ACTIVE_IMAGE_SETTINGS,
     VIEWER_SET_REGIONS_VISIBILITY,
     VIEWER_REMOVE_INTERACTION_OR_CONTROL,
+    VIEWER_SET_SHAPE_POPUP_VISIBILITY,
     UI_MODIFY,
 } from '../events/events';
 
@@ -354,7 +355,10 @@ export class Index  {
                         this.initIframeSubscriptions(messageContext, iframeTarget)
                         this.context.publish(UI_MODIFY, {subject: 'sidebar_right', action: 'toggle'})
                         this.context.publish(UI_MODIFY, {subject: 'header', action: 'hide'})
-                        setTimeout(() => this.context.publish(VIEWER_REMOVE_INTERACTION_OR_CONTROL, {args: ['fullscreen']}), 100);
+                        setTimeout(() => {
+                            this.context.publish(VIEWER_REMOVE_INTERACTION_OR_CONTROL, {args: ['fullscreen']});
+                            this.context.publish(VIEWER_SET_SHAPE_POPUP_VISIBILITY, false);
+                        }, 100);
                         break;
                     case 'prepare':
                         // Request the ROI data for this image and let it propagate through the framework
