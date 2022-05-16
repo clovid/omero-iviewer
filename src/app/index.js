@@ -353,6 +353,7 @@ export class Index  {
                         console.log('initialization between parent and iframe complete');
                         iframeTarget = event.source;
                         this.initIframeSubscriptions(messageContext, iframeTarget)
+                        this.context.publish(UI_MODIFY, {subject: 'sidebar_left', action: 'toggle'})
                         this.context.publish(UI_MODIFY, {subject: 'sidebar_right', action: 'toggle'})
                         this.context.publish(UI_MODIFY, {subject: 'header', action: 'hide'})
                         setTimeout(() => {

@@ -118,11 +118,19 @@ export class Header {
                         $('.center').css('padding-top', '');
                         $('.fixed-header').show();
                     }
+                    break;
+
+                case 'sidebar_left':
+                    if (params.action === 'toggle') {
+                        $('.collapse-left').trigger('click')
+                    }
+                    break;
 
                 case 'sidebar_right':
                     if (params.action === 'toggle') {
                         $('.collapse-right').trigger('click')
                     }
+                    break;
 
                 default:
                     break;
