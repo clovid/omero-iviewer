@@ -67,7 +67,10 @@ import {integrateStyleIntoJsonObject,
 import OmeroImage from './source/Image';
 import Regions from './source/Regions';
 import Mask from './geom/Mask';
-import { VIEWER_SET_REGIONS_VISIBILITY } from '../../events/events'
+import {
+    VIEWER_SET_REGIONS_VISIBILITY,
+    VIEWER_REMOVE_INTERACTION_OR_CONTROL
+} from '../../events/events'
 
 /**
  * @classdesc
@@ -360,6 +363,12 @@ class Viewer extends OlObject {
                 VIEWER_SET_REGIONS_VISIBILITY,
                 (params={}) => {
                     this.setRegionsVisibility(...params.args)
+            });
+            this.eventbus_.subscribe(
+                VIEWER_REMOVE_INTERACTION_OR_CONTROL,
+                (params={}) => {
+                    console.log('VIEWER_REMOVE_INTERACTION_OR_CONTROL', params)
+                    this.removeInteractionOrControl(...params.args)
             });
         }
 
