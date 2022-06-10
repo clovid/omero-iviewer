@@ -426,6 +426,18 @@ export class Index  {
                             true,
                         ]})
                         break;
+                    case 'hide_annotations':
+                        this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [
+                            false,
+                            parentMessage.payload.annotationIds
+                        ]})
+                        break;
+                    case 'show_annotations':
+                        this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [
+                            true,
+                            parentMessage.payload.annotationIds
+                        ]})
+                        break;
                     case 'show_header_actions':
                         this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'show'})
                         break;
