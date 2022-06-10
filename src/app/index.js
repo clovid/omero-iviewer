@@ -374,7 +374,7 @@ export class Index  {
                             hist_id: hist_id,
                             roi_id: this.context.getSelectedImageConfig().regions_info.getNewRegionsId(),
                             shape: {
-                               type: "ellipse",
+                               type: "arrow",
                                StrokeColor: -65281,
                                FillColor: -256,
                                "StrokeWidth": {
