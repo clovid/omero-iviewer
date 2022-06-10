@@ -845,7 +845,7 @@ class Viewer extends OlObject {
      * @param {string|null} panToShape the id of the shape to pan into view or null
      * @param {boolean} zoomToShape if true (and panToShape is specified) zoom it into view
      */
-    selectShapes(roi_shape_ids, selected, clear, panToShape, zoomToShape) {
+    selectShapes(roi_shape_ids, selected, clear, panToShape, zoomToShape, zoomOut) {
         // without a regions layer there will be no select of regions ...
         var regions = this.getRegions();
         if (regions === null || regions.select_ === null) return;
@@ -866,12 +866,14 @@ class Viewer extends OlObject {
                 // Zoom till shape is 300px on screen (or until we reach 100%)
                 target_res = Math.max(length / 300, 1);
                 // Don't zoom out from current resolution
-                var res = this.viewer_.getView().getResolution();
-                // If we zoom in, make sure we centre on shape
-                if (target_res < res) {
-                    forceCentre = true;
+                if (!zoomOut) {
+                    var res = this.viewer_.getView().getResolution();
+                    // If we zoom in, make sure we centre on shape
+                    if (target_res < res) {
+                        forceCentre = true;
+                    }
+                    target_res = Math.min(target_res, res);
                 }
-                target_res = Math.min(target_res, res);
             }
             this.centerOnGeometry(geom, target_res, forceCentre);
         }

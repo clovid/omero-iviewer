@@ -424,6 +424,7 @@ export class Index  {
                             true,
                             parentMessage.payload.annotationId,
                             true,
+                            true
                         ]})
                         break;
                     case 'hide_annotations':
