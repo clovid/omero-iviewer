@@ -72,6 +72,7 @@ import {
     VIEWER_REMOVE_INTERACTION_OR_CONTROL,
     VIEWER_SET_SHAPE_POPUP_VISIBILITY,
     VIEWER_INITALIZED,
+    VIEWER_SELECT_SHAPES,
 } from '../../events/events'
 
 /**
@@ -379,6 +380,11 @@ class Viewer extends OlObject {
             this.eventbus_.publish(
                 VIEWER_INITALIZED
             );
+            this.eventbus_.subscribe(
+                VIEWER_SELECT_SHAPES,
+                (params={}) => {
+                    this.selectShapes(...params.args)
+            });
         }
 
         // execute initialization function

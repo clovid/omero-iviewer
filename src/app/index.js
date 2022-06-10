@@ -68,6 +68,7 @@ import {
     VIEWER_REMOVE_INTERACTION_OR_CONTROL,
     VIEWER_SET_SHAPE_POPUP_VISIBILITY,
     VIEWER_INITALIZED,
+    VIEWER_SELECT_SHAPES,
     UI_MODIFY,
 } from '../events/events';
 
@@ -410,6 +411,20 @@ export class Index  {
                         break;
                     case 'hide_header_actions':
                         this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'hide'})
+                        break;
+                    case 'zoom_to_annotation':
+                        // * @param {Array<string>} roi_shape_ids list in roi_id:shape_id notation
+                        // * @param {boolean} selected flag whether we should (de)select the rois
+                        // * @param {boolean} clear flag whether we should clear existing selection beforehand
+                        // * @param {string|null} panToShape the id of the shape to pan into view or null
+                        // * @param {boolean} zoomToShape if true (and panToShape is specified) zoom it into view
+                        this.context.publish(VIEWER_SELECT_SHAPES, {args: [
+                            [parentMessage.payload.annotationId],
+                            true,
+                            true,
+                            parentMessage.payload.annotationId,
+                            true,
+                        ]})
                         break;
                     case 'show_header_actions':
                         this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'show'})
