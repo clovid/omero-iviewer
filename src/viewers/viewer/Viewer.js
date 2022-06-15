@@ -365,6 +365,14 @@ class Viewer extends OlObject {
             this.eventbus_.subscribe(
                 VIEWER_SET_REGIONS_VISIBILITY,
                 (params={}) => {
+                    if (!params.args[1]) {
+                        // Use all ids
+                        const rois = this.getRois();
+                        params.args[1] = rois.reduce((prev, roi) => [
+                            ...prev,
+                            ...roi.shapes.map(shape => `${roi['@id']}:${shape['@id']}`)
+                        ], [])
+                    }
                     this.setRegionsVisibility(...params.args)
             });
             this.eventbus_.subscribe(
