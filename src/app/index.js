@@ -373,6 +373,8 @@ export class Index  {
                         break;
                     case 'newPoint':
                       {
+                        let shapeType = (parentMessage.payload && parentMessage.payload.shapeType) || 'arrow';
+                        let shapeColor = (parentMessage.payload && parentMessage.payload.shapeColor) || '-65281';
                         // Create a new annotation (currently an ellipse)
                         let id =  this.context.getSelectedImageConfig().regions_info.image_info.config_id;
                         let hist_id = this.context.getSelectedImageConfig().regions_info.history.getHistoryId();
@@ -382,8 +384,8 @@ export class Index  {
                             hist_id: hist_id,
                             roi_id: this.context.getSelectedImageConfig().regions_info.getNewRegionsId(),
                             shape: {
-                               type: "arrow",
-                               StrokeColor: -65281,
+                               type: shapeType,
+                               StrokeColor: parseInt(shapeColor),
                                FillColor: -256,
                                "StrokeWidth": {
                                   "@type": "TBD#LengthI",
