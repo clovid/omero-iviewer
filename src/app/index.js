@@ -343,6 +343,14 @@ export class Index  {
     handleIframeConnection() {
         let iframeTarget;
         const messageContext = 'clovid_integration'; // shared "secret"
+        document.addEventListener('regions_information_retrieved', event => {
+            parent.postMessage({
+                context: messageContext,
+                type: 'event',
+                name: 'annotations_loaded',
+                params: { 'iviewerid': this.my_id, 'vqvpid': this.context.vqvpid},
+            }, '*');
+        });
         window.addEventListener('message', event => {
             if (!event.data || !event.data.context || event.data.context !== messageContext || event.data.target !== this.my_id) {
                 return;

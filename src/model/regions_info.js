@@ -310,11 +310,11 @@ export default class RegionsInfo  {
      * We track how many shapes aren't visible to check the
      * 'Show All' checkbox when they are all shown (toggle count ==0);
      * We also do this for each ROI since each ROI also has a
-     * 'Show All' checkbox 
+     * 'Show All' checkbox
      *
      * @memberof RegionsInfo
      * @param {string} id a shape id in format roi:shape-id
-     * @param {number} increment update counts by this number 
+     * @param {number} increment update counts by this number
      */
     updateRoiVisibilityToggles(shape_id, increment) {
         // Update total count
@@ -466,6 +466,7 @@ export default class RegionsInfo  {
                 } else if (this.is_pending) {
                     this.setData(response.data);
                     this.roi_count_on_current_plane = response.meta.totalCount;
+                    document.dispatchEvent(new CustomEvent('regions_information_retrieved'));
                 }
             }, error : (error) => {
                 this.is_pending = false;
