@@ -856,11 +856,10 @@ class Viewer extends OlObject {
     selectShapes(roi_shape_ids, selected, clear, panToShape, zoomToShape, zoomOut) {
         // without a regions layer there will be no select of regions ...
         var regions = this.getRegions();
-        if (regions === null || regions.select_ === null) return;
+        if (regions === null) return;
 
-        if (typeof clear === 'boolean' && clear) regions.select_.clearSelection();
+        if (typeof clear === 'boolean' && clear && regions.select_ !== null) regions.select_.clearSelection();
         regions.setProperty(roi_shape_ids, "selected", selected);
-
         if (typeof regions.idIndex_[panToShape] === 'object') {
             let geom = regions.idIndex_[panToShape].getGeometry();
             let target_res;
