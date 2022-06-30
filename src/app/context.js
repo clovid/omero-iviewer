@@ -435,20 +435,21 @@ export default class Context {
      * @memberof Context
      */
     processInitialParameters() {
-        let server = this.initParams[REQUEST_PARAMS.SERVER];
-        if (typeof server !== 'string' || server.length === 0) server = "";
-        else {
-            // check for localhost and if we need to prefix for requests
-            let isLocal =
-                server.indexOf("localhost") >=0 ||
-                server.indexOf("127.0.0.1") >=0 ;
-            let minLen = "http://".length;
-            let pos =
-                server.indexOf("localhost") >= minLen ?
-                    server.indexOf("localhost") : server.indexOf("127.0.0.1");
-            if (isLocal && pos < minLen)  // we need to add the http
-                server = "http://" + server;
-        }
+        let server = '';
+        // let server = this.initParams[REQUEST_PARAMS.SERVER];
+        // if (typeof server !== 'string' || server.length === 0) server = "";
+        // else {
+        //     // check for localhost and if we need to prefix for requests
+        //     let isLocal =
+        //         server.indexOf("localhost") >=0 ||
+        //         server.indexOf("127.0.0.1") >=0 ;
+        //     let minLen = "http://".length;
+        //     let pos =
+        //         server.indexOf("localhost") >= minLen ?
+        //             server.indexOf("localhost") : server.indexOf("127.0.0.1");
+        //     if (isLocal && pos < minLen)  // we need to add the http
+        //         server = "http://" + server;
+        // }
         this.server = server;
         delete this.initParams[REQUEST_PARAMS.SERVER];
 
