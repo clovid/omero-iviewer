@@ -139,7 +139,7 @@ class Draw {
 
     /**
      * @constructor
-     * 
+     *
      * @param {Array} previous_modes the previously set interaction modes on the regions
      * @param {source.Regions} regions_reference an Regions instance.
     */
@@ -376,6 +376,9 @@ class Draw {
             case "arrow":
                 typeFunction = Draw.prototype.drawArrow_;
                 break;
+            case "fixed_arrow":
+                typeFunction = Draw.prototype.drawFixedArrow_;
+                break;
             case "rectangle" :
                 typeFunction = Draw.prototype.drawRectangle_;
                 break;
@@ -570,6 +573,26 @@ class Draw {
 
                 return geometry;
             });
+    }
+
+    /**
+     * Drawing interaction for arrow with fixed polyline
+     *
+     * @private
+     * @param {Object} event the event object for the drawing interaction
+     */
+    drawFixedArrow_(event) {
+        const currentResolution = this.regions_.viewer_.viewer_.getView().getResolution();
+        const secondPointOffset = 45 * currentResolution;
+        this.drawShapeCommonCode_('Point', "polyline",
+            function(coordinates, opt_geometry) {
+                const arrowCoordinates = [
+                    [coordinates[0] - secondPointOffset, coordinates[1] - secondPointOffset],
+                    coordinates,
+                ];
+                return new Line(arrowCoordinates, false, true);
+            }
+        );
     }
 
     /**

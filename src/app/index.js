@@ -378,7 +378,7 @@ export class Index  {
                         break;
                     case 'newPoint':
                       {
-                        let shapeType = (parentMessage.payload && parentMessage.payload.shapeType) || 'arrow';
+                        let shapeType = (parentMessage.payload && parentMessage.payload.shapeType) || 'fixed_arrow';
                         let shapeColor = (parentMessage.payload && parentMessage.payload.shapeColor) || '-65281';
                         // Create a new annotation (currently an ellipse)
                         let id =  this.context.getSelectedImageConfig().regions_info.image_info.config_id;
