@@ -424,6 +424,9 @@ export class Index  {
                     case 'show_all_annotations':
                         this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [true]})
                         break;
+                    case 'show_header_actions':
+                        this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'show'})
+                        break;
                     case 'hide_header_actions':
                         this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'hide'})
                         break;
