@@ -344,11 +344,16 @@ export class Index  {
         let iframeTarget;
         const messageContext = 'clovid_integration'; // shared "secret"
         document.addEventListener('regions_information_retrieved', event => {
+            const shapes = this.context.getSelectedImageConfig().regions_info.getAllShapeIds();
+
             parent.postMessage({
                 context: messageContext,
                 type: 'event',
                 name: 'annotations_loaded',
                 params: { 'iviewerid': this.my_id, 'vqvpid': this.context.vqvpid},
+                payload: {
+                    shapes,
+                }
             }, '*');
         });
         window.addEventListener('message', event => {
