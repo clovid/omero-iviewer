@@ -410,6 +410,30 @@ export class Index  {
                           {
                             config_id: id
                           });
+                        let ri = this.context.getSelectedImageConfig().regions_info;
+                        ri.shape_to_be_drawn = null;
+                        this.context.publish(REGIONS_DRAW_SHAPE, { config_id: ri.image_info.config_id,
+                               shape: { type: "rectangle",
+                               StrokeColor: -65281,
+                               FillColor: -256,
+                               "StrokeWidth": {
+                                  "@type": "TBD#LengthI",
+                                  "Unit": "PIXEL",
+                                  "Symbol": "pixel",
+                                  "Value": 2
+                               }
+                            }, abort: false, hist_id: ri.history.getHistoryId(), roi_id: ri.getNewRegionsId()});
+                        this.context.publish(REGIONS_DRAW_SHAPE, { config_id: ri.image_info.config_id,
+                               shape: { type: null,
+                               StrokeColor: -65281,
+                               FillColor: -256,
+                               "StrokeWidth": {
+                                  "@type": "TBD#LengthI",
+                                  "Unit": "PIXEL",
+                                  "Symbol": "pixel",
+                                  "Value": 2
+                               }
+                            }, abort: true, hist_id: ri.history.getHistoryId(), roi_id: ri.getNewRegionsId()});
                       }
                       break;
                     default:
