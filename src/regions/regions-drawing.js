@@ -59,7 +59,8 @@ export default class RegionsDrawing extends EventSubscriber {
         "line",
         "polyline",
         "polygon",
-        "label"
+        "label",
+        "fixed_arrow",
     ];
 
     /**
