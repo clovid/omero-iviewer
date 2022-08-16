@@ -376,42 +376,40 @@ export class Index  {
                         // Request the ROI data for this image and let it propagate through the framework
                         this.context.getSelectedImageConfig().regions_info.requestData();
                         break;
-                    case 'newPoint':
-                      {
-                        let shapeType = (parentMessage.payload && parentMessage.payload.shapeType) || 'fixed_arrow';
-                        let shapeColor = (parentMessage.payload && parentMessage.payload.shapeColor) || '-65281';
-                        // Create a new annotation (currently an ellipse)
-                        let id =  this.context.getSelectedImageConfig().regions_info.image_info.config_id;
-                        let hist_id = this.context.getSelectedImageConfig().regions_info.history.getHistoryId();
-                        this.context.publish(REGIONS_DRAW_SHAPE,
-                          { config_id: id,
+                    case 'newPoint': {
+                        const shapeType = (parentMessage.payload && parentMessage.payload.shapeType) || 'fixed_arrow';
+                        const shapeColor = parseInt((parentMessage.payload && parentMessage.payload.shapeColor)) || -65281;
+
+                        const regions_info = this.context.getSelectedImageConfig().regions_info;
+                        regions_info.shape_to_be_drawn = shapeType;
+                        const config_id = regions_info.image_info.config_id;
+                        const shape_definition = {
+                            ...regions_info.shape_defaults,
+                            type: shapeType,
+                            StrokeColor: shapeColor,
+                        }
+                        shape_definition.StrokeWidth.Value = 2;
+
+                        this.context.publish(REGIONS_DRAW_SHAPE, {
+                            config_id,
                             abort: false,
-                            hist_id: hist_id,
-                            roi_id: this.context.getSelectedImageConfig().regions_info.getNewRegionsId(),
-                            shape: {
-                               type: shapeType,
-                               StrokeColor: parseInt(shapeColor),
-                               FillColor: -256,
-                               "StrokeWidth": {
-                                  "@type": "TBD#LengthI",
-                                  "Unit": "PIXEL",
-                                  "Symbol": "pixel",
-                                  "Value": 2
-                               }
-                            }
-                          }
-                        );
-                      }
-                      break;
-                    case 'savePoint':
-                      {
-                        let id = this.context.getSelectedImageConfig().regions_info.image_info.config_id;
-                        this.context.publish(REGIONS_STORE_SHAPES,
-                          {
-                            config_id: id
-                          });
-                      }
-                      break;
+                            hist_id: regions_info.history.getHistoryId(),
+                            roi_id: regions_info.getNewRegionsId(),
+                            shape: shape_definition
+                        });
+
+                        this.context.eventbus.subscribeOnce(REGIONS_SHAPE_GENERATED, params => {
+                            if (params.config_id !== config_id) return;
+                            // Switch back to normal mode
+                            setTimeout(() => this.context.publish(REGIONS_DRAW_SHAPE, {config_id, abort: true}), 50);
+                        });
+                        break;
+                    }
+                    case 'savePoint': {
+                        const config_id = this.context.getSelectedImageConfig().regions_info.image_info.config_id;
+                        this.context.publish(REGIONS_STORE_SHAPES, { config_id });
+                        break;
+                    }
                     default:
                         break;
                 }
