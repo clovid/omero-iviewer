@@ -863,7 +863,7 @@ class Viewer extends OlObject {
         if (typeof regions.idIndex_[panToShape] === 'object') {
             let geom = regions.idIndex_[panToShape].getGeometry();
             let target_res;
-            let forceCentre = false;
+            let forceCentre = true;
             if (zoomToShape) {
                 let extent = geom.getExtent();
                 // extent is [x, -y, x2, -y2]
