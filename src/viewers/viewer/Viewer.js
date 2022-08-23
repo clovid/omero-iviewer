@@ -852,8 +852,10 @@ class Viewer extends OlObject {
      * @param {boolean} clear flag whether we should clear existing selection beforehand
      * @param {string|null} panToShape the id of the shape to pan into view or null
      * @param {boolean} zoomToShape if true (and panToShape is specified) zoom it into view
+     * @param {boolean} zoomOut if true it zooms out to let if fit.
+     * @param {boolean} onlyPanIfNeeded if true pans only if shape not in viewport
      */
-    selectShapes(roi_shape_ids, selected, clear, panToShape, zoomToShape, zoomOut) {
+    selectShapes(roi_shape_ids, selected, clear, panToShape, zoomToShape, zoomOut, onlyPanIfNeeded) {
         // without a regions layer there will be no select of regions ...
         var regions = this.getRegions();
         if (regions === null) return;
@@ -863,7 +865,7 @@ class Viewer extends OlObject {
         if (typeof regions.idIndex_[panToShape] === 'object') {
             let geom = regions.idIndex_[panToShape].getGeometry();
             let target_res;
-            let forceCentre = true;
+            let forceCentre = !onlyPanIfNeeded;
             if (zoomToShape) {
                 let extent = geom.getExtent();
                 // extent is [x, -y, x2, -y2]
