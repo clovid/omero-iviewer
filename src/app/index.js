@@ -428,15 +428,40 @@ export class Index  {
                     case 'hide_header_actions':
                         this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'hide'})
                         break;
+                    case 'deselect_annotation':
+                        this.context.publish(VIEWER_SELECT_SHAPES, {args: [
+                            [parentMessage.payload.annotationId],
+                            false
+                        ]});
+                        break;
+                    case 'pan_to_annotation':
+                        // * @param {Array<string>} roi_shape_ids list in roi_id:shape_id notation
+                        // * @param {boolean} selected flag whether we should (de)select the rois
+                        // * @param {boolean} clear flag whether we should clear existing selection beforehand
+                        // * @param {string|null} panToShape the id of the shape to pan into view or null
+                        // * @param {boolean} zoomToShape if true (and panToShape is specified) zoom it into view
+                        // * @param {boolean} onlyPanIfNeeded if true pans only if shape not in viewport
+                        this.context.publish(VIEWER_SELECT_SHAPES, {args: [
+                            [parentMessage.payload.annotationId],
+                            !!parentMessage.payload.select,
+                            true,
+                            parentMessage.payload.annotationId,
+                            false,
+                            false,
+                            true,
+                        ]});
+                        break;
+
                     case 'zoom_to_annotation':
                         // * @param {Array<string>} roi_shape_ids list in roi_id:shape_id notation
                         // * @param {boolean} selected flag whether we should (de)select the rois
                         // * @param {boolean} clear flag whether we should clear existing selection beforehand
                         // * @param {string|null} panToShape the id of the shape to pan into view or null
                         // * @param {boolean} zoomToShape if true (and panToShape is specified) zoom it into view
+                        // * @param {boolean} zoomOut if true (and zoomToShape is true) zoom out if neccessary
                         this.context.publish(VIEWER_SELECT_SHAPES, {args: [
                             [parentMessage.payload.annotationId],
-                            true,
+                            !!parentMessage.payload.select,
                             true,
                             parentMessage.payload.annotationId,
                             true,
