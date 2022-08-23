@@ -30,7 +30,7 @@ import Tile from 'ol/layer/Tile';
 import Vector from 'ol/layer/Vector';
 import View from 'ol/View';
 import OlMap from 'ol/Map';
-import {intersects, getCenter} from 'ol/extent';
+import {getCenter, containsExtent} from 'ol/extent';
 import {noModifierKeys, primaryAction} from 'ol/events/condition';
 
 import Draw from './interaction/Draw';
@@ -928,10 +928,13 @@ class Viewer extends OlObject {
                 this.viewer_.getView().setResolution(constrainedResolution);
         }
 
-        // only center if we don't intersect the viewport after zooming
-        if (intersects(
-            geometry.getExtent(),
-            this.viewer_.getView().calculateExtent()) && (!forceCentre)) return;
+        // only center if the geomety is not fully visible in the viewport after zooming
+        if (
+            containsExtent(
+                this.viewer_.getView().calculateExtent(),
+                geometry.getExtent()
+            ) && (!forceCentre)
+        ) return;
 
         // center (taking into account potential rotation)
         var rot = this.viewer_.getView().getRotation();
