@@ -558,6 +558,7 @@ export class Index  {
             HISTOGRAM_RANGE_UPDATE,
             THUMBNAILS_UPDATE,
             SAVE_ACTIVE_IMAGE_SETTINGS,
+            VIEWER_INITALIZED
         ].forEach(event =>
             this.context.eventbus.subscribe(
                 event,
