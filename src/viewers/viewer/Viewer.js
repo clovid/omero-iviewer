@@ -859,7 +859,7 @@ class Viewer extends OlObject {
      * @param {Array<string>} roi_shape_ids list in roi_id:shape_id notation
      * @param {boolean} selected flag whether we should (de)select the rois
      * @param {boolean} clear flag whether we should clear existing selection beforehand
-     * @param {string|null} panToShape the id of the shape to pan into view or null
+     * @param {string|array|null} panToShape the id(s) of the shape to pan into view or null
      * @param {boolean} zoomToShape if true (and panToShape is specified) zoom it into view
      * @param {boolean} zoomOut if true it zooms out to let if fit.
      * @param {boolean} onlyPanIfNeeded if true pans only if shape not in viewport
@@ -871,8 +871,15 @@ class Viewer extends OlObject {
 
         if (typeof clear === 'boolean' && clear && regions.select_ !== null) regions.select_.clearSelection();
         regions.setProperty(roi_shape_ids, "selected", selected);
-        if (typeof regions.idIndex_[panToShape] === 'object') {
-            let geom = regions.idIndex_[panToShape].getGeometry();
+        if (!panToShape) return;
+        if (typeof panToShape === 'string') {
+            panToShape = [panToShape];
+        }
+        const validGeometries = panToShape
+            .filter(shape => typeof regions.idIndex_[shape] === 'object')
+            .map(shape => regions.idIndex_[shape].getGeometry());
+        if (validGeometries.length) {
+            let geom = new GeometryCollection(validGeometries);
             let target_res;
             let forceCentre = !onlyPanIfNeeded;
             if (zoomToShape) {
@@ -952,14 +959,19 @@ class Viewer extends OlObject {
             geometry = polygonFromExtent(ext);
             geometry.rotate(rot, getCenter(ext));
         }
-        var coords = geometry.getFlatCoordinates();
+        var coords = geometry instanceof GeometryCollection ?
+            geometry.getGeometries().reduce((prev, curr) => [...prev, ...curr.getFlatCoordinates()] , []) :
+            geometry.getFlatCoordinates();
         var cosine = Math.cos(-rot);
         var sine = Math.sin(-rot);
         var minRotX = +Infinity;
         var minRotY = +Infinity;
         var maxRotX = -Infinity;
         var maxRotY = -Infinity;
-        var stride = geometry.getStride();
+        var stride = geometry instanceof GeometryCollection ?
+            geometry.getGeometries()[0].getStride() :
+            geometry.getStride();
+
         for (var i = 0, ii = coords.length; i < ii; i += stride) {
             var rotX = coords[i] * cosine - coords[i + 1] * sine;
             var rotY = coords[i] * sine + coords[i + 1] * cosine;
