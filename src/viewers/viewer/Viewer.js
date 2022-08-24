@@ -708,7 +708,13 @@ class Viewer extends OlObject {
         // because of the asynchronious nature of the initialization
         // we need to do this here
         if (typeof(postSuccessHook) === 'function')
-        postSuccessHook.call(this);
+        try {
+            console.log('try calling post success hook');
+            postSuccessHook.call(this);
+            console.log('finished calling post success hook');
+        } catch (error) {
+            console.error('error post success hook', error);
+        }
 
         if (this.tried_regions) this.addRegions();
 
