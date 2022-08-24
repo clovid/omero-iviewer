@@ -70,6 +70,7 @@ import {
     VIEWER_INITALIZED,
     VIEWER_SELECT_SHAPES,
     UI_MODIFY,
+    VIEWER_SET_REGIONS_MODES,
 } from '../events/events';
 
 /**
@@ -417,16 +418,16 @@ export class Index  {
             if (parentMessage.type === 'action') {
                 switch (parentMessage.name) {
                     case 'hide_all_annotations':
-                        this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [false]})
+                        this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [false]});
                         break;
                     case 'show_all_annotations':
-                        this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [true]})
+                        this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [true]});
                         break;
                     case 'show_header_actions':
-                        this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'show'})
+                        this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'show'});
                         break;
                     case 'hide_header_actions':
-                        this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'hide'})
+                        this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'hide'});
                         break;
                     case 'deselect_annotation':
                         this.context.publish(VIEWER_SELECT_SHAPES, {args: [
@@ -466,29 +467,36 @@ export class Index  {
                             parentMessage.payload.annotationId,
                             true,
                             true
-                        ]})
+                        ]});
                         break;
                     case 'hide_annotations':
                         this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [
                             false,
                             parentMessage.payload.annotationIds
-                        ]})
+                        ]});
                         break;
                     case 'show_annotations':
                         this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [
                             true,
                             parentMessage.payload.annotationIds
-                        ]})
+                        ]});
                         break;
                     case 'show_header_actions':
-                        this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'show'})
+                        this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'show'});
                         break;
                     case 'hide_navbar':
-                        this.context.publish(UI_MODIFY, {subject: 'header', action: 'hide'})
+                        this.context.publish(UI_MODIFY, {subject: 'header', action: 'hide'});
                         break;
                     case 'show_navbar':
-                        this.context.publish(UI_MODIFY, {subject: 'header', action: 'show'})
+                        this.context.publish(UI_MODIFY, {subject: 'header', action: 'show'});
                         break;
+                    case 'disable_interaction':
+                        this.context.publish(VIEWER_SET_REGIONS_MODES, {args: ['select']});
+                        break;
+                    case 'enable_interaction':
+                        this.context.publish(VIEWER_SET_REGIONS_MODES, {args: ['select', 'modify', 'translate']});
+                        break;
+
 
                     default:
                         break;

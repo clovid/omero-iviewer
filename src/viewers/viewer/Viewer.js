@@ -73,6 +73,7 @@ import {
     VIEWER_SET_SHAPE_POPUP_VISIBILITY,
     VIEWER_INITALIZED,
     VIEWER_SELECT_SHAPES,
+    VIEWER_SET_REGIONS_MODES,
 } from '../../events/events'
 
 /**
@@ -385,14 +386,22 @@ class Viewer extends OlObject {
                 (flag) => {
                     this.enableShapePopup(flag)
             });
-            this.eventbus_.publish(
-                VIEWER_INITALIZED
-            );
             this.eventbus_.subscribe(
                 VIEWER_SELECT_SHAPES,
                 (params={}) => {
                     this.selectShapes(...params.args)
             });
+            this.eventbus_.subscribe(
+                VIEWER_SET_REGIONS_MODES,
+                (params={}) => {
+                    const validModes = params.args
+                            .map(modeString => REGIONS_MODE[modeString.toUpperCase()])
+                            .filter(mode => !!mode)
+                    this.setRegionsModes(validModes)
+            });
+            this.eventbus_.publish(
+                VIEWER_INITALIZED
+            );
         }
 
         // execute initialization function
