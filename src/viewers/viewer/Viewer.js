@@ -72,7 +72,7 @@ import {
     VIEWER_SET_REGIONS_VISIBILITY,
     VIEWER_REMOVE_INTERACTION_OR_CONTROL,
     VIEWER_SET_SHAPE_POPUP_VISIBILITY,
-    VIEWER_INITALIZED,
+    VIEWER_INITIALIZED,
     VIEWER_SELECT_SHAPES,
     VIEWER_SET_REGIONS_MODES,
 } from '../../events/events'
@@ -401,7 +401,7 @@ class Viewer extends OlObject {
                     this.setRegionsModes(validModes)
             });
             this.eventbus_.publish(
-                VIEWER_INITALIZED
+                VIEWER_INITIALIZED
             );
         }
 

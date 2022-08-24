@@ -558,7 +558,7 @@ export class Index  {
             HISTOGRAM_RANGE_UPDATE,
             THUMBNAILS_UPDATE,
             SAVE_ACTIVE_IMAGE_SETTINGS,
-            VIEWER_INITALIZED
+            VIEWER_INITIALIZED
         ].forEach(event =>
             this.context.eventbus.subscribe(
                 event,
@@ -574,7 +574,7 @@ export class Index  {
         )
 
         this.context.eventbus.subscribe(
-            VIEWER_INITALIZED,
+            VIEWER_INITIALIZED,
             () => {
                 this.context.publish(VIEWER_REMOVE_INTERACTION_OR_CONTROL, {args: ['fullscreen']});
                 this.context.publish(VIEWER_SET_SHAPE_POPUP_VISIBILITY, false);
