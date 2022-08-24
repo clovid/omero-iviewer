@@ -469,6 +469,16 @@ export class Index  {
                             true
                         ]});
                         break;
+                    case 'zoom_to_annotations':
+                        this.context.publish(VIEWER_SELECT_SHAPES, {args: [
+                            parentMessage.payload.annotationIds,
+                            false,
+                            true,
+                            parentMessage.payload.annotationIds,
+                            true,
+                            true
+                        ]});
+                    break;
                     case 'hide_annotations':
                         this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [
                             false,
