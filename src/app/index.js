@@ -67,7 +67,7 @@ import {
     VIEWER_SET_REGIONS_VISIBILITY,
     VIEWER_REMOVE_INTERACTION_OR_CONTROL,
     VIEWER_SET_SHAPE_POPUP_VISIBILITY,
-    VIEWER_INITALIZED,
+    VIEWER_INITIALIZED,
     VIEWER_SELECT_SHAPES,
     UI_MODIFY,
     VIEWER_SET_REGIONS_MODES,
@@ -374,41 +374,17 @@ export class Index  {
                         this.context.publish(UI_MODIFY, {subject: 'header', action: 'hide'})
                         break;
                     case 'prepare':
-                        // Request the ROI data for this image and let it propagate through the framework
-                        this.context.getSelectedImageConfig().regions_info.requestData();
+                        console.warn('DEPRECATION: please use "action" instead "event" for "prepare"');
+                        this.temp_prepare();
                         break;
                     case 'newPoint': {
-                        const shapeType = (parentMessage.payload && parentMessage.payload.shapeType) || 'fixed_arrow';
-                        const shapeColor = parseInt((parentMessage.payload && parentMessage.payload.shapeColor)) || -65281;
-
-                        const regions_info = this.context.getSelectedImageConfig().regions_info;
-                        regions_info.shape_to_be_drawn = shapeType;
-                        const config_id = regions_info.image_info.config_id;
-                        const shape_definition = {
-                            ...regions_info.shape_defaults,
-                            type: shapeType,
-                            StrokeColor: shapeColor,
-                        }
-                        shape_definition.StrokeWidth.Value = 2;
-
-                        this.context.publish(REGIONS_DRAW_SHAPE, {
-                            config_id,
-                            abort: false,
-                            hist_id: regions_info.history.getHistoryId(),
-                            roi_id: regions_info.getNewRegionsId(),
-                            shape: shape_definition
-                        });
-
-                        this.context.eventbus.subscribeOnce(REGIONS_SHAPE_GENERATED, params => {
-                            if (params.config_id !== config_id) return;
-                            // Switch back to normal mode
-                            setTimeout(() => this.context.publish(REGIONS_DRAW_SHAPE, {config_id, abort: true}), 50);
-                        });
+                        console.warn('DEPRECATION: please use "action" add_annotation instead "event" newPoint for adding new point');
+                        this.temp_newPoint(parentMessage);
                         break;
                     }
                     case 'savePoint': {
-                        const config_id = this.context.getSelectedImageConfig().regions_info.image_info.config_id;
-                        this.context.publish(REGIONS_STORE_SHAPES, { config_id });
+                        console.warn('DEPRECATION: please use "action" save_annotation instead "event" savePoint for saving new point');
+                        this.temp_savePoint();
                         break;
                     }
                     default:
@@ -417,6 +393,9 @@ export class Index  {
             }
             if (parentMessage.type === 'action') {
                 switch (parentMessage.name) {
+                    case 'prepare':
+                        this.temp_prepare();
+                        break;
                     case 'hide_all_annotations':
                         this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [false]});
                         break;
@@ -429,18 +408,25 @@ export class Index  {
                     case 'hide_header_actions':
                         this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'hide'});
                         break;
+                    case 'add_annotation':
+                        this.temp_newPoint(parentMessage);
+                        break;
+                    case 'save_annotation':
+                        this.temp_savePoint();
+                        break;
                     case 'deselect_annotation':
                         this.context.publish(VIEWER_SELECT_SHAPES, {args: [
                             [parentMessage.payload.annotationId],
                             false
                         ]});
                         break;
-                    case 'pan_to_annotation':
+                    case 'pan_to_annotation': // TODO: should zoom out so that the shape is completely visible
                         // * @param {Array<string>} roi_shape_ids list in roi_id:shape_id notation
                         // * @param {boolean} selected flag whether we should (de)select the rois
                         // * @param {boolean} clear flag whether we should clear existing selection beforehand
                         // * @param {string|null} panToShape the id of the shape to pan into view or null
                         // * @param {boolean} zoomToShape if true (and panToShape is specified) zoom it into view
+                        // * @param {boolean} zoomOut if true (and zoomToShape is true) zoom out if neccessary
                         // * @param {boolean} onlyPanIfNeeded if true pans only if shape not in viewport
                         this.context.publish(VIEWER_SELECT_SHAPES, {args: [
                             [parentMessage.payload.annotationId],
@@ -448,7 +434,7 @@ export class Index  {
                             true,
                             parentMessage.payload.annotationId,
                             false,
-                            false,
+                            true,
                             true,
                         ]});
                         break;
@@ -522,6 +508,49 @@ export class Index  {
             name: 'handshake',
             params: { 'iviewerid': this.my_id, 'vqvpid': this.context.vqvpid}
         }, '*')
+
+    }
+
+    // TODO: remove after prepare event is removed
+    temp_prepare() {
+        // Request the ROI data for this image and let it propagate through the framework
+        this.context.getSelectedImageConfig().regions_info.requestData();
+    }
+
+    // remove after newPoint event is removed
+    temp_newPoint(parentMessage) {
+        const shapeType = (parentMessage.payload && parentMessage.payload.shapeType) || 'fixed_arrow';
+        const shapeColor = parseInt((parentMessage.payload && parentMessage.payload.shapeColor)) || -65281;
+
+        const regions_info = this.context.getSelectedImageConfig().regions_info;
+        regions_info.shape_to_be_drawn = shapeType;
+        const config_id = regions_info.image_info.config_id;
+        const shape_definition = {
+            ...regions_info.shape_defaults,
+            type: shapeType,
+            StrokeColor: shapeColor,
+        }
+        shape_definition.StrokeWidth.Value = 2;
+
+        this.context.publish(REGIONS_DRAW_SHAPE, {
+            config_id,
+            abort: false,
+            hist_id: regions_info.history.getHistoryId(),
+            roi_id: regions_info.getNewRegionsId(),
+            shape: shape_definition
+        });
+
+        this.context.eventbus.subscribeOnce(REGIONS_SHAPE_GENERATED, params => {
+            if (params.config_id !== config_id) return;
+            // Switch back to normal mode
+            setTimeout(() => this.context.publish(REGIONS_DRAW_SHAPE, {config_id, abort: true}), 50);
+        });
+    }
+
+    // remove after savePoint event is removed
+    temp_savePoint() {
+        const config_id = this.context.getSelectedImageConfig().regions_info.image_info.config_id;
+        this.context.publish(REGIONS_STORE_SHAPES, { config_id });
     }
 
     initIframeSubscriptions(messageContext, iframeTarget) {
