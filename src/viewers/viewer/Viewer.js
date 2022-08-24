@@ -19,6 +19,7 @@
 import OlObject from 'ol/Object';
 import MapEventType from 'ol/MapEventType';
 import Geometry from 'ol/geom/Geometry';
+import GeometryCollection from 'ol/geom/GeometryCollection';
 import GeometryType from 'ol/geom/GeometryType';
 import Polygon from 'ol/geom/Polygon';
 import {fromExtent as polygonFromExtent} from 'ol/geom/Polygon.js';
