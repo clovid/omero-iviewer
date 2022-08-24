@@ -466,7 +466,6 @@ export default class RegionsInfo  {
                 } else if (this.is_pending) {
                     this.setData(response.data);
                     this.roi_count_on_current_plane = response.meta.totalCount;
-                    document.dispatchEvent(new CustomEvent('regions_information_retrieved'));
                 }
             }, error : (error) => {
                 this.is_pending = false;
@@ -536,6 +535,7 @@ export default class RegionsInfo  {
             console.error("Failed to sync Rois: " + err);
         }
         this.ready = true;
+        document.dispatchEvent(new CustomEvent('regions_information_retrieved'));
     }
 
     /**
