@@ -491,9 +491,6 @@ export class Index  {
                             parentMessage.payload.annotationIds
                         ]});
                         break;
-                    case 'show_header_actions':
-                        this.context.publish(UI_MODIFY, {subject: 'header_actions', action: 'show'});
-                        break;
                     case 'hide_navbar':
                         this.context.publish(UI_MODIFY, {subject: 'header', action: 'hide'});
                         break;
