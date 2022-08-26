@@ -869,7 +869,7 @@ class Viewer extends OlObject {
         var regions = this.getRegions();
         if (regions === null) return;
 
-        if (typeof clear === 'boolean' && clear && regions.select_ !== null) regions.select_.clearSelection();
+        if (typeof clear === 'boolean' && clear && regions.select_ !== null) regions.select_.clearSelection(roi_shape_ids)
         regions.setProperty(roi_shape_ids, "selected", selected);
         if (!panToShape) return;
         if (typeof panToShape === 'string') {

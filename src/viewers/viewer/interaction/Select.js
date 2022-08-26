@@ -39,7 +39,7 @@ class Select extends Interaction {
 
     /**
      * @constructor
-     * 
+     *
      * @param {source.Regions} regions_reference a reference to Regions
      */
     constructor(regions_reference) {
@@ -93,13 +93,18 @@ class Select extends Interaction {
 
     /**
      * Clears/unselects all selected features
+     *
+     * @param {Array.<string>} skipIds an array of ids ('roi_id:shape_id') that should be skipped
      */
-    clearSelection() {
+    clearSelection(skipIds) {
         // delegate
         var ids = []
         this.getFeatures().forEach(
             function(feature) {
-                ids.push(feature.getId());
+                var id = feature.getId();
+                if (!skipIds || skipIds.indexOf(id) === -1) {
+                    ids.push(id);
+                }
         }, this);
         if (ids.length > 0) this.regions_.setProperty(ids, "selected", false);
 
