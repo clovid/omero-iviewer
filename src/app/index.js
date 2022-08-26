@@ -415,12 +415,20 @@ export class Index  {
                         this.temp_savePoint();
                         break;
                     case 'deselect_annotation':
+                        if (typeof parentMessage.payload.annotationId !== 'string') {
+                            console.error('Wrong annotationId for deselect_annotation action provided', parentMessage.payload);
+                            break;
+                        }
                         this.context.publish(VIEWER_SELECT_SHAPES, {args: [
                             [parentMessage.payload.annotationId],
                             false
                         ]});
                         break;
                     case 'pan_to_annotation': // TODO: should zoom out so that the shape is completely visible
+                        if (typeof parentMessage.payload.annotationId !== 'string') {
+                            console.error('Wrong annotationId for pan_to_annotation action provided', parentMessage.payload);
+                            break;
+                        }
                         // * @param {Array<string>} roi_shape_ids list in roi_id:shape_id notation
                         // * @param {boolean} selected flag whether we should (de)select the rois
                         // * @param {boolean} clear flag whether we should clear existing selection beforehand
@@ -440,6 +448,10 @@ export class Index  {
                         break;
 
                     case 'zoom_to_annotation':
+                        if (typeof parentMessage.payload.annotationId !== 'string') {
+                            console.error('Wrong annotationId for zoom_to_annotation action provided', parentMessage.payload);
+                            break;
+                        }
                         // * @param {Array<string>} roi_shape_ids list in roi_id:shape_id notation
                         // * @param {boolean} selected flag whether we should (de)select the rois
                         // * @param {boolean} clear flag whether we should clear existing selection beforehand
