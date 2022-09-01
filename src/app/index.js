@@ -343,7 +343,29 @@ export class Index  {
 
     handleIframeConnection() {
         let iframeTarget;
+        let viewerInitialized = false;
         const messageContext = 'clovid_integration'; // shared "secret"
+        this.context.eventbus.subscribeOnce(
+            VIEWER_INITIALIZED,
+            () => {
+                viewerInitialized = true;
+                if (iframeTarget) {
+                    finishIframeInitialization(this.context);
+                }
+            }
+        );
+        const finishIframeInitialization = (context) => {
+            context.publish(VIEWER_REMOVE_INTERACTION_OR_CONTROL, {args: ['fullscreen']});
+            context.publish(VIEWER_SET_SHAPE_POPUP_VISIBILITY, false);
+            parent.postMessage({
+                context: messageContext,
+                type: 'event',
+                name: VIEWER_INITIALIZED,
+                params: { 'iviewerid': this.my_id, 'vqvpid': context.vqvpid}
+            }, '*');
+            console.log('initialization between parent and iframe complete');
+        }
+
         document.addEventListener('regions_information_retrieved', event => {
             const shapes = this.context.getSelectedImageConfig().regions_info.getAllShapeIds();
 
@@ -366,12 +388,14 @@ export class Index  {
             if (parentMessage.type === 'event') {
                 switch (parentMessage.name) {
                     case 'initialized':
-                        console.log('initialization between parent and iframe complete');
                         iframeTarget = event.source;
                         this.initIframeSubscriptions(messageContext, iframeTarget)
                         this.context.publish(UI_MODIFY, {subject: 'sidebar_left', action: 'toggle'})
                         this.context.publish(UI_MODIFY, {subject: 'sidebar_right', action: 'toggle'})
                         this.context.publish(UI_MODIFY, {subject: 'header', action: 'hide'})
+                        if (viewerInitialized) {
+                            finishIframeInitialization(this.context)
+                        }
                         break;
                     case 'prepare':
                         console.warn('DEPRECATION: please use "action" instead "event" for "prepare"');
@@ -598,8 +622,7 @@ export class Index  {
             REGIONS_COPY_SHAPES,
             HISTOGRAM_RANGE_UPDATE,
             THUMBNAILS_UPDATE,
-            SAVE_ACTIVE_IMAGE_SETTINGS,
-            VIEWER_INITIALIZED
+            SAVE_ACTIVE_IMAGE_SETTINGS
         ].forEach(event =>
             this.context.eventbus.subscribe(
                 event,
@@ -613,13 +636,5 @@ export class Index  {
                 }
             )
         )
-
-        this.context.eventbus.subscribe(
-            VIEWER_INITIALIZED,
-            () => {
-                this.context.publish(VIEWER_REMOVE_INTERACTION_OR_CONTROL, {args: ['fullscreen']});
-                this.context.publish(VIEWER_SET_SHAPE_POPUP_VISIBILITY, false);
-            }
-        );
     }
 }
