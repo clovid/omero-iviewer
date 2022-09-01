@@ -435,6 +435,15 @@ export class Index  {
                     case 'add_annotation':
                         this.temp_newPoint(parentMessage);
                         break;
+                    case 'cancel_annotation':
+                        const regions_info = this.context.getSelectedImageConfig().regions_info;
+                        this.context.publish(REGIONS_DRAW_SHAPE, { config_id: regions_info.image_info.config_id,
+                               shape: { type: null },
+                               abort: true,
+                               hist_id: regions_info.history.getHistoryId(),
+                               roi_id: regions_info.getNewRegionsId()
+                        });
+                        break;
                     case 'save_annotation':
                         this.temp_savePoint();
                         break;
