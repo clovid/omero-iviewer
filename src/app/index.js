@@ -355,7 +355,7 @@ export class Index  {
             }
         );
         const finishIframeInitialization = (context) => {
-            context.publish(VIEWER_REMOVE_INTERACTION_OR_CONTROL, {args: ['fullscreen']});
+            //context.publish(VIEWER_REMOVE_INTERACTION_OR_CONTROL, {args: ['fullscreen']});
             context.publish(VIEWER_SET_SHAPE_POPUP_VISIBILITY, false);
             parent.postMessage({
                 context: messageContext,
