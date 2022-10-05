@@ -354,7 +354,7 @@ export default class ImageInfo {
                 let errMsg =
                     error.status === 404 ?
                         "Image not found" :
-                        `Failed to get image data: '${textStatus}'`;
+                        `Failed to get image data: '${textStatus}'. Please make sure to enable 3rd-party-cookies.`;
                 Ui.showModalMessage(errMsg, 'OK');
             }
         });
