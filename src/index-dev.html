@@ -43,9 +43,11 @@
                 'MAX_PROJECTION_BYTES': "268435456", // 1024 * 1024 * 256
                 'IMAGES': "3",   // "4420" // "73537",
                 'DATASET': "4",
-                'VQVPID': get('VQVPID')
+                'BSESSION': get('bsession'),
                 //'WELL': "1"
         };
+
+        window.SESSION_COOKIE_IS_SET = true;
         // check if we need to log in
         // regular redirect logic of server
         // fails with different origin (proxy)

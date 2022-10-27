@@ -27,6 +27,17 @@
             window.INITIAL_REQUEST_PARAMS['{{key}}'] = "{{value}}";
         {% endfor %}
 
+        // Check if we can use a session cookie (only possible in iframes if 3rd party cookies are allowed)
+        var checkSession = new XMLHttpRequest();
+        checkSession.onreadystatechange = function (res) {
+            if (this.readyState == 4) {
+              window.SESSION_COOKIE_IS_SET = checkSession.response === 'OK';
+              console.log('Set SESSION_COOKIE_IS_SET to ', window.SESSION_COOKIE_IS_SET)
+            }
+        }
+        checkSession.open('GET', 'webclient/keepalive_ping/', true);
+        checkSession.send();
+
         window.OME = {}
         OME.OPEN_WITH = [];
 

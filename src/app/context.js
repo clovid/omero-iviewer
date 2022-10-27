@@ -240,6 +240,11 @@ export default class Context {
             cache: false,
             dataType : Misc.useJsonp(this.server) ? "jsonp" : "json",
             beforeSend: (xhr, settings) => {
+                // We use the bsession if we cannot set any session cookie because of 3rd party cookie restrictions
+                if (window.INITIAL_REQUEST_PARAMS.BSESSION && window.SESSION_COOKIE_IS_SET === false) {
+                    const char = settings.url.includes('?') ? '&' : '?';
+                    settings.url = `${settings.url}${char}bsession=${window.INITIAL_REQUEST_PARAMS.BSESSION}&server=1`
+                }
                 if (!Misc.useJsonp(this.server) &&
                     !(/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type)))
                     xhr.setRequestHeader("X-CSRFToken",
