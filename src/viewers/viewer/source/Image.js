@@ -57,7 +57,7 @@ import {isArray} from '../utils/Misc';
  *
  * Note: Properties plane, time and channels have setters as well
  *       since they can change at runtime
- * 
+ *
  * NB: Tried to update this class to ES6 but
  * this fails because we need to create a tileUrlFunction() that is needed for super()
  * but this function cannot use 'this' because we can't use 'this' before super().
@@ -319,6 +319,10 @@ const OmeroImage = function(options) {
                            ':' + this.projection_opts_.end;
             }
             url += '&q=0.9';
+
+            if (window.INITIAL_REQUEST_PARAMS.BSESSION && window.SESSION_COOKIE_IS_SET === false) {
+                url += `&bsession=${window.INITIAL_REQUEST_PARAMS.BSESSION}&server=1`
+            }
 
             return url;
     };
