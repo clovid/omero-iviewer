@@ -23,6 +23,10 @@ This section assumes that an OMERO.web is already installed.
 
 Install the app using `pip <https://pip.pypa.io/en/stable/>`_:
 
+NB: You need to ensure that you are running ``pip`` from the python environment
+where ``omero-web`` is installed. Depending on your install, you may need to
+call ``pip`` with, for example: ``/path/to/venv/bin/pip install ...``
+
 ::
 
     $ pip install -U omero-iviewer
@@ -65,4 +69,4 @@ OMERO.iviewer is released under the AGPL.
 Copyright
 ---------
 
-2017-2020, The Open Microscopy Environment
+2017-2022, The Open Microscopy Environment

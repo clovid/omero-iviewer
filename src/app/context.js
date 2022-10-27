@@ -440,23 +440,22 @@ export default class Context {
      * @memberof Context
      */
     processInitialParameters() {
-        let server = '';
-        // let server = this.initParams[REQUEST_PARAMS.SERVER];
-        // if (typeof server !== 'string' || server.length === 0) server = "";
-        // else {
-        //     // check for localhost and if we need to prefix for requests
-        //     let isLocal =
-        //         server.indexOf("localhost") >=0 ||
-        //         server.indexOf("127.0.0.1") >=0 ;
-        //     let minLen = "http://".length;
-        //     let pos =
-        //         server.indexOf("localhost") >= minLen ?
-        //             server.indexOf("localhost") : server.indexOf("127.0.0.1");
-        //     if (isLocal && pos < minLen)  // we need to add the http
-        //         server = "http://" + server;
-        // }
+        let server = this.initParams[REQUEST_PARAMS.HOST];
+        if (typeof server !== 'string' || server.length === 0) server = "";
+        else {
+            // check for localhost and if we need to prefix for requests
+            let isLocal =
+                server.indexOf("localhost") >=0 ||
+                server.indexOf("127.0.0.1") >=0 ;
+            let minLen = "http://".length;
+            let pos =
+                server.indexOf("localhost") >= minLen ?
+                    server.indexOf("localhost") : server.indexOf("127.0.0.1");
+            if (isLocal && pos < minLen)  // we need to add the http
+                server = "http://" + server;
+        }
         this.server = server;
-        delete this.initParams[REQUEST_PARAMS.SERVER];
+        delete this.initParams[REQUEST_PARAMS.HOST];
 
         let interpolate =
             typeof this.initParams[REQUEST_PARAMS.INTERPOLATE] === 'string' ?
@@ -467,6 +466,14 @@ export default class Context {
         this.roi_page_size = this.initParams[REQUEST_PARAMS.ROI_PAGE_SIZE] || 500;
         this.max_projection_bytes = parseInt(this.initParams[REQUEST_PARAMS.MAX_PROJECTION_BYTES], 10)
                                     || (1024 * 1024 * 256);
+        this.max_projection_bytes = parseInt(this.initParams[REQUEST_PARAMS.MAX_PROJECTION_BYTES], 10) || (1024 * 1024 * 256);
+        let userPalette = `${this.initParams[REQUEST_PARAMS.ROI_COLOR_PALETTE]}`
+        if (userPalette != '') {
+            let arr = userPalette.match(/\[[^\[\]]*\]/g)
+            this.roi_color_palette = []; let i = 0
+            arr.forEach(arr => {this.roi_color_palette[i] = arr.match(/[A-Za-z#][A-Za-z0-9]*(\([^A-Za-z]*\))?/g); i++})
+        }
+        this.show_palette_only = (this.initParams[REQUEST_PARAMS.SHOW_PALETTE_ONLY] != 'False') || false
     }
 
     /**
