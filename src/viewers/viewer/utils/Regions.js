@@ -471,6 +471,8 @@ export const createFeaturesFromRegionsResponse =
                         shape['omero:details']['permissions'];
                     // calculate area/length
                     regions.getLengthAndAreaForShape(actualFeature, true);
+                    // Don't show the feature until it is being asked to be shown
+                    actualFeature['visible'] = false;
                     // add us to the return array
                     ret.push(actualFeature);
                 } catch(some_error) {

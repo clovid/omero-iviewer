@@ -485,7 +485,6 @@ export default class RegionsInfo  {
 
         // reset regions info data and history
         this.resetRegionsInfo();
-
         try {
             let count = 0;
             for (let r in data) {
@@ -513,7 +512,7 @@ export default class RegionsInfo  {
                         let shapeId = newShape['@id']
                         newShape.shape_id = "" + roiId + ":" + shapeId;
                         // we add some flags we are going to need
-                        newShape.visible = true;
+                        newShape.visible = false;
                         newShape.selected = false;
                         newShape.deleted = false;
                         newShape.modified = false;
