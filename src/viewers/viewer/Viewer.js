@@ -75,6 +75,7 @@ import {
     VIEWER_INITIALIZED,
     VIEWER_SELECT_SHAPES,
     VIEWER_SET_REGIONS_MODES,
+    VIEWER_ZOOM_TO_FIT,
 } from '../../events/events'
 
 /**
@@ -381,6 +382,11 @@ class Viewer extends OlObject {
                 VIEWER_REMOVE_INTERACTION_OR_CONTROL,
                 (params={}) => {
                     this.removeInteractionOrControl(...params.args)
+            });
+            this.eventbus_.subscribe(
+                VIEWER_ZOOM_TO_FIT,
+                () => {
+                    this.zoomToFit();
             });
             this.eventbus_.subscribe(
                 VIEWER_SET_SHAPE_POPUP_VISIBILITY,
