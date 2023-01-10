@@ -88,6 +88,7 @@ export const VIEWER_SET_REGIONS_MODES = "VIEWER_SET_REGIONS_MODES";
 export const VIEWER_INITIALIZED = "VIEWER_INITIALIZED";
 export const VIEWER_SELECT_SHAPES = "VIEWER_SELECT_SHAPES";
 export const UI_MODIFY = "UI_MODIFY";
+export const VIEWER_ZOOM_TO_FIT = "VIEWER_ZOOM_TO_FIT";
 
 /**
  * Facilitates recurring event subscription

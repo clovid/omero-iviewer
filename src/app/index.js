@@ -72,6 +72,7 @@ import {
     VIEWER_SELECT_SHAPES,
     UI_MODIFY,
     VIEWER_SET_REGIONS_MODES,
+    VIEWER_ZOOM_TO_FIT,
 } from '../events/events';
 
 /**
@@ -423,6 +424,9 @@ export class Index  {
                 switch (parentMessage.name) {
                     case 'prepare':
                         this.temp_prepare();
+                        break;
+                    case 'zoom_to_fit': 
+                        this.context.publish(VIEWER_ZOOM_TO_FIT, null); 
                         break;
                     case 'hide_all_annotations':
                         this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [false]});

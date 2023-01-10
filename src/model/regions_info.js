@@ -485,7 +485,6 @@ export default class RegionsInfo  {
 
         // reset regions info data and history
         this.resetRegionsInfo();
-
         try {
             let count = 0;
             for (let r in data) {
@@ -731,7 +730,7 @@ export default class RegionsInfo  {
         //if they set a color palette, set the first one as default stroke color
         if(Array.isArray(this.image_info.context.roi_color_palette)){
             this.shape_defaults['StrokeColor'] = Converters.rgbaToSignedInteger(this.image_info.context.roi_color_palette[0][0])
-        } else { 
+        } else {
             this.shape_defaults['StrokeColor'] = -65281;
         }
         this.shape_defaults['FillColor'] = -256;
