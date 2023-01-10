@@ -29,6 +29,7 @@ import {inject} from 'aurelia-framework';
 import Context from './context';
 import Misc from '../utils/misc';
 import OpenWith from '../utils/openwith';
+import {Utils} from '../utils/regions';
 import Ui from '../utils/ui';
 import {PLUGIN_PREFIX, SYNC_LOCK, WEBGATEWAY} from '../utils/constants';
 import {
@@ -383,7 +384,10 @@ export class Index  {
             if (!event.data || !event.data.context || event.data.context !== messageContext || event.data.target !== this.my_id) {
                 return;
             }
-            const parentMessage = event.data
+            const parentMessage = event.data;
+            const regions_info = this.context.getSelectedImageConfig().regions_info;
+            const config_id = regions_info.image_info.config_id;
+
             console.log('handle message from parent', parentMessage);
             if (parentMessage.type === 'event') {
                 switch (parentMessage.name) {
@@ -436,12 +440,12 @@ export class Index  {
                         this.temp_newPoint(parentMessage);
                         break;
                     case 'cancel_annotation':
-                        const regions_info = this.context.getSelectedImageConfig().regions_info;
-                        this.context.publish(REGIONS_DRAW_SHAPE, { config_id: regions_info.image_info.config_id,
-                               shape: { type: null },
-                               abort: true,
-                               hist_id: regions_info.history.getHistoryId(),
-                               roi_id: regions_info.getNewRegionsId()
+                        this.context.publish(REGIONS_DRAW_SHAPE, {
+                            config_id,
+                            shape: { type: null },
+                            abort: true,
+                            hist_id: regions_info.history.getHistoryId(),
+                            roi_id: regions_info.getNewRegionsId()
                         });
                         break;
                     case 'save_annotation':
@@ -534,7 +538,12 @@ export class Index  {
                     case 'enable_interaction':
                         this.context.publish(VIEWER_SET_REGIONS_MODES, {args: ['select', 'modify', 'translate']});
                         break;
-
+                    case 'disable_comments':
+                        this.context.publish(REGIONS_SHOW_COMMENTS, {config_id, value: false});
+                        break;
+                    case 'enable_comments':
+                        this.context.publish(REGIONS_SHOW_COMMENTS, {config_id, value: true});
+                        break;
 
                     default:
                         break;
@@ -566,6 +575,7 @@ export class Index  {
     temp_newPoint(parentMessage) {
         const shapeType = (parentMessage.payload && parentMessage.payload.shapeType) || 'fixed_arrow';
         const shapeColor = parseInt((parentMessage.payload && parentMessage.payload.shapeColor)) || -65281;
+        const shapeComment = (parentMessage.payload && parentMessage.payload.shapeComment);
 
         const regions_info = this.context.getSelectedImageConfig().regions_info;
         regions_info.shape_to_be_drawn = shapeType;
@@ -587,6 +597,26 @@ export class Index  {
 
         this.context.eventbus.subscribeOnce(REGIONS_SHAPE_GENERATED, params => {
             if (params.config_id !== config_id) return;
+
+            // Set comment if any
+            if (shapeComment) {
+                const shapeId = params.shapes[0].oldId;
+                // from regions-edit.js
+                const deltaProps = {type: shapeType, Text: shapeComment}
+                const updates = { properties: ['Text'], values: [shapeComment] };
+                const updateHandler = Utils.createUpdateHandler(updates);
+
+                this.context.publish(
+                    REGIONS_MODIFY_SHAPES,
+                    {
+                        config_id,
+                        shapes: [shapeId],
+                        modifies_attachment: false,
+                        definition: deltaProps,
+                        callback: updateHandler
+                    }
+                );
+            }
             // Switch back to normal mode
             setTimeout(() => this.context.publish(REGIONS_DRAW_SHAPE, {config_id, abort: true}), 50);
         });
