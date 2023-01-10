@@ -471,6 +471,8 @@ export const createFeaturesFromRegionsResponse =
                         shape['omero:details']['permissions'];
                     // calculate area/length
                     regions.getLengthAndAreaForShape(actualFeature, true);
+                    // TODO: remove "|| true" after VQuest implemented param
+                    actualFeature['visible'] = !(regions.viewer_.initParams_.ROI_HIDDEN_ON_INIT === 'true' || true);
                     // add us to the return array
                     ret.push(actualFeature);
                 } catch(some_error) {

@@ -513,7 +513,7 @@ export default class RegionsInfo  {
                         let shapeId = newShape['@id']
                         newShape.shape_id = "" + roiId + ":" + shapeId;
                         // we add some flags we are going to need
-                        newShape.visible = true;
+                        newShape.visible = !this.image_info.context.roi_hidden_on_init;
                         newShape.selected = false;
                         newShape.deleted = false;
                         newShape.modified = false;

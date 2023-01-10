@@ -469,6 +469,8 @@ export default class Context {
             arr.forEach(arr => {this.roi_color_palette[i] = arr.match(/[A-Za-z#][A-Za-z0-9]*(\([^A-Za-z]*\))?/g); i++})
         }
         this.show_palette_only = (this.initParams[REQUEST_PARAMS.SHOW_PALETTE_ONLY] != 'False') || false
+        // TODO: remove "|| true" after VQuest implemented param
+        this.roi_hidden_on_init = this.getInitialRequestParam('ROI_HIDDEN_ON_INIT') === 'true' || true;
     }
 
     /**
