@@ -425,8 +425,8 @@ export class Index  {
                     case 'prepare':
                         this.temp_prepare();
                         break;
-                    case 'zoom_to_fit': 
-                        this.context.publish(VIEWER_ZOOM_TO_FIT, null); 
+                    case 'zoom_to_fit':
+                        this.context.publish(VIEWER_ZOOM_TO_FIT, null);
                         break;
                     case 'hide_all_annotations':
                         this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [false]});
@@ -509,6 +509,10 @@ export class Index  {
                         ]});
                         break;
                     case 'zoom_to_annotations':
+                        if (!parentMessage.payload.annotationIds.length) {
+                            console.warn('No annotations provided for zoom_to_annotations', parentMessage.payload);
+                            break;
+                        }
                         this.context.publish(VIEWER_SELECT_SHAPES, {args: [
                             parentMessage.payload.annotationIds,
                             false,
@@ -519,12 +523,20 @@ export class Index  {
                         ]});
                     break;
                     case 'hide_annotations':
+                        if (!parentMessage.payload.annotationIds.length) {
+                            console.warn('No annotations provided for hide_annotations', parentMessage.payload);
+                            break;
+                        }
                         this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [
                             false,
                             parentMessage.payload.annotationIds
                         ]});
                         break;
                     case 'show_annotations':
+                        if (!parentMessage.payload.annotationIds.length) {
+                            console.warn('No annotations provided for show_annotations', parentMessage.payload);
+                            break;
+                        }
                         this.context.publish(VIEWER_SET_REGIONS_VISIBILITY, {args: [
                             true,
                             parentMessage.payload.annotationIds
