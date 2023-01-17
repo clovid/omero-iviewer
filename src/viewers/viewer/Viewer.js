@@ -904,6 +904,27 @@ class Viewer extends OlObject {
                         forceCentre = true;
                     }
                     target_res = Math.min(target_res, res);
+                } else {
+                    // Check if the target_res exceeds the image dimensions
+                    // related to the current viewport. If so, we zoom to fit
+                    // the image in the viewport.
+                    const imageWidth = this.image_info_.size.width;
+                    const imageHeight = this.image_info_.size.height;
+                    const sizeFromViewPort = this.viewer_.getView().getSizeFromViewport_();
+                    const viewportWidth = sizeFromViewPort[0];
+                    const viewportHeight = sizeFromViewPort[1];
+                    let max_res;
+                    if (width < height) {
+                        max_res = imageHeight / viewportHeight;
+                    } else {
+                        max_res = imageWidth / viewportWidth;
+                    }
+                    const shouldZoomToFit = target_res > max_res;
+
+                    if (shouldZoomToFit) {
+                        this.zoomToFit();
+                        return;
+                    }
                 }
             }
             this.centerOnGeometry(geom, target_res, forceCentre);
@@ -2429,6 +2450,14 @@ class Viewer extends OlObject {
             var ext = view.getProjection().getExtent();
             view.fit([ext[0], -ext[3], ext[2], ext[1]]);
         }
+    }
+
+    getResolutionToFit(geom) {
+        const extent = geom.getExtent();
+        const width = extent[2] - extent[0];
+        const height = extent[3] - extent[1];
+        const length = Math.max(width, height);
+        return Math.max(length, 1);
     }
 }
 
