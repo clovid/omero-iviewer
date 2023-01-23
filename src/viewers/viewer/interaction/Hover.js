@@ -85,8 +85,7 @@ class Hover extends Pointer {
         if (hit && !hit['selected'] && !isOverShapeEditPopup) {
             let coords = mapBrowserEvent.coordinate;
             let textStyle = hit['oldText'];
-            // Can be removed if https://github.com/ome/omero-iviewer/issues/442 is resolved
-            const showCommentsOnHover = this.regions_.show_comments_;
+            const showCommentsOnHover = this.regions_.show_tooltip_;
             if (showCommentsOnHover && textStyle && textStyle.getText() && textStyle.getText().length > 0) {
                 let text = textStyle.getText();
                 let width = Math.min(Math.max(100, text.length * 8), 250);

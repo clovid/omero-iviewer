@@ -114,6 +114,14 @@ class Regions extends Vector {
         this.show_comments_ = false;
 
         /**
+         * this flag determines whether a toolip is displayed on hover for shapes other than labels
+         * Defauls to true
+         * @type {boolean}
+         * @private
+         */
+        this.show_tooltip_ = true;
+
+        /**
          * the associated regions information
          * as retrieved from the omero server
          * @type {Object}

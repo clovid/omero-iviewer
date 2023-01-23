@@ -841,6 +841,19 @@ class Viewer extends OlObject {
     }
 
     /**
+     * Toggles the visibility of the shape tooltip on hover.
+     *
+     * @param {boolean} flag if true we are displaying a tooltip with the shapes comment on hover (if there), otherwise not
+     */
+    showShapeTooltip(flag) {
+        var regions = this.getRegions();
+        if (regions && typeof flag === 'boolean') {
+            regions.show_tooltip_ = flag;
+            regions.changed();
+        }
+    }
+
+    /**
      * Enable or disable the showing of a Popup to edit selected shapes.
      *
      * @param {boolean} flag
