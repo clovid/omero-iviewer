@@ -76,6 +76,8 @@ import {
     VIEWER_SELECT_SHAPES,
     VIEWER_SET_REGIONS_MODES,
     VIEWER_ZOOM_TO_FIT,
+    VIEWER_SET_TEXT_BEHAVIOR,
+    VIEWER_SET_SHAPE_TOOLTIP_VISIBILITY,
 } from '../../events/events'
 
 /**
@@ -405,6 +407,16 @@ class Viewer extends OlObject {
                             .map(modeString => REGIONS_MODE[modeString.toUpperCase()])
                             .filter(mode => !!mode)
                     this.setRegionsModes(validModes)
+            });
+            this.eventbus_.subscribe(
+                VIEWER_SET_TEXT_BEHAVIOR,
+                (params={}) => {
+                    this.setTextBehaviorForRegions(...params.args)
+            });
+            this.eventbus_.subscribe(
+                VIEWER_SET_SHAPE_TOOLTIP_VISIBILITY,
+                (flag) => {
+                    this.showShapeTooltip(flag)
             });
             this.eventbus_.publish(
                 VIEWER_INITIALIZED

@@ -73,6 +73,8 @@ import {
     UI_MODIFY,
     VIEWER_SET_REGIONS_MODES,
     VIEWER_ZOOM_TO_FIT,
+    VIEWER_SET_TEXT_BEHAVIOR,
+    VIEWER_SET_SHAPE_TOOLTIP_VISIBILITY,
 } from '../events/events';
 
 /**
@@ -556,9 +558,11 @@ export class Index  {
                         break;
                     case 'disable_comments':
                         this.context.publish(REGIONS_SHOW_COMMENTS, {config_id, value: false});
+                        this.context.publish(VIEWER_SET_SHAPE_TOOLTIP_VISIBILITY, false);
                         break;
                     case 'enable_comments':
                         this.context.publish(REGIONS_SHOW_COMMENTS, {config_id, value: true});
+                        this.context.publish(VIEWER_SET_SHAPE_TOOLTIP_VISIBILITY, true);
                         break;
 
                     default:
