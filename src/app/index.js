@@ -373,6 +373,13 @@ export class Index  {
         document.addEventListener('regions_created', event => {
             this.context.publish(VIEWER_SET_SHAPE_TOOLTIP_VISIBILITY, false);
             this.context.publish(VIEWER_SET_TEXT_BEHAVIOR, {args: [false, false]});
+            parent.postMessage({
+                context: messageContext,
+                type: 'event',
+                name: 'regions_created',
+                params: { 'iviewerid': this.my_id, 'vqvpid': this.context.vqvpid},
+            }, '*');
+            console.log('send event');
         });
 
         document.addEventListener('regions_information_retrieved', event => {
