@@ -809,6 +809,8 @@ class Viewer extends OlObject {
                 [REGIONS_MODE['SELECT'],
                 REGIONS_MODE['MODIFY'],
                 REGIONS_MODE['TRANSLATE']]);
+
+            document.dispatchEvent(new CustomEvent('regions_created'));
         }
 
         //Overlay to show a popup for editing shapes (adds itself to map)

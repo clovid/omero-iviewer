@@ -370,9 +370,13 @@ export class Index  {
             console.log('initialization between parent and iframe complete');
         }
 
+        document.addEventListener('regions_created', event => {
+            this.context.publish(VIEWER_SET_SHAPE_TOOLTIP_VISIBILITY, false);
+            this.context.publish(VIEWER_SET_TEXT_BEHAVIOR, {args: [false, false]});
+        });
+
         document.addEventListener('regions_information_retrieved', event => {
             const shapes = this.context.getSelectedImageConfig().regions_info.getAllShapeIds();
-
             parent.postMessage({
                 context: messageContext,
                 type: 'event',
