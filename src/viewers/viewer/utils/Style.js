@@ -255,9 +255,11 @@ export const updateStyleFunction =
             var textStyle = oldStyle.getText();
             // if show_comments flag is to false, we only set the text for labels
             var isLabel = (geom instanceof Label);
+            if (!isLabel && textStyle instanceof Text) {
+                feature['oldText'] = textStyle.clone();
+            }
             if (!isLabel && !regions.show_comments_ &&
                 (textStyle instanceof Text)) {
-                    feature['oldText'] = textStyle.clone();
                     textStyle = null;
                     oldStyle.text_ = textStyle;
             } else if (!isLabel && regions.show_comments_ &&
