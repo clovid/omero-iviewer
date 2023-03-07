@@ -110,7 +110,7 @@ def index(request, iid=None, conn=None, **kwargs):
     params['SHOW_PALETTE_ONLY'] = SHOW_PALETTE_ONLY
 
     return render(
-        request, 'omero_iviewer/index.html',
+        request, 'omero_iviewer_clovid/index.html',
         {'params': params, 'iviewer_url_suffix': u"?_iviewer-%s" % __version__}
     )
 
