@@ -28,5 +28,5 @@ from django.apps import AppConfig
 
 
 class IviewerAppConfig(AppConfig):
-    name = "omero_iviewer"
-    label = "iviewer"
+    name = "omero_iviewer_clovid"
+    label = "iviewerclovid"
