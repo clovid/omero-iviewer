@@ -20,7 +20,7 @@ import {noView} from 'aurelia-framework';
 /**
  * @type {string}
  */
-export const APP_NAME = 'iviewer';
+export const APP_NAME = 'iviewer_clovid';
 
 /**
  * @type {string}
@@ -31,7 +31,7 @@ export const APP_TITLE = 'OMERO.' + APP_NAME;
  * the plugin name
  * @type {string}
  */
-export const PLUGIN_NAME = 'omero_iviewer';
+export const PLUGIN_NAME = 'omero_iviewer_clovid';
 
 /**
  * a convenience string lookup for WEB_API_BASE
