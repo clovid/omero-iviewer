@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from omero_iviewer.utils import get_version
+from omero_iviewer_clovid.utils import get_version
 
 
 VERSION = (0, 12, 0)

@@ -18,8 +18,8 @@ rm -rf plugin/ol3-viewer/static/
 
 #recreate static and templates directories
 echo "Recreating build/deploy directories..."
-mkdir -p plugin/omero_iviewer/static/omero_iviewer/css/images
-mkdir -p plugin/omero_iviewer/templates/omero_iviewer
+mkdir -p plugin/omero_iviewer/static/omero_iviewer_clovid/css/images
+mkdir -p plugin/omero_iviewer/templates/omero_iviewer_clovid
 mkdir -p plugin/ol3-viewer/static/ol3-viewer/js
 mkdir -p plugin/ol3-viewer/static/ol3-viewer/css
 

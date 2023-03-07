@@ -25,7 +25,7 @@ from omeroweb.settings import process_custom_settings, report_settings
 # load settings
 IVIEWER_SETTINGS_MAPPING = {
 
-    "omero.web.iviewer.max_projection_bytes":
+    "omero.web.iviewer_clovid.max_projection_bytes":
         ["MAX_PROJECTION_BYTES",
          -1,
          int,
@@ -35,13 +35,13 @@ IVIEWER_SETTINGS_MAPPING = {
           "omero.pixeldata.max_projection_bytes will be used or "
           "the lower value if both are set.")],
 
-    "omero.web.iviewer.roi_page_size":
+    "omero.web.iviewer_clovid.roi_page_size":
         ["ROI_PAGE_SIZE",
          500,
          int,
          "Page size for ROI pagination."],
 
-    "omero.web.iviewer.roi_color_palette":
+    "omero.web.iviewer_clovid.roi_color_palette":
         ["ROI_COLOR_PALETTE",
          '',
          str,
@@ -49,7 +49,7 @@ IVIEWER_SETTINGS_MAPPING = {
           "Define rows with brackets, and seperate values with commas"
           "ex: [rgb(0,0,0),rgba(0,0,0,0)],[#000000]...")],
 
-    "omero.web.iviewer.show_palette_only":
+    "omero.web.iviewer_clovid.show_palette_only":
         ["SHOW_PALETTE_ONLY",
          False,
          bool,
