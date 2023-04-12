@@ -5,7 +5,7 @@
     :target: https://badge.fury.io/py/omero-iviewer
 
 OMERO.iviewer Clovid
-=============
+====================
 
 A **fork** of the OMERO.web app for visualizing images in OMERO.
 
@@ -118,9 +118,8 @@ Example integration
 See `integration example <https://github.com/clovid/integration-example>`_ to see an fully working example how this adapted WSI viewer can be used.
 
 
-########################################
-## Below you find the original README ##
-########################################
+
+    Info: Below you find the original README
 
 
 Also see `SUPPORT.md <https://github.com/ome/omero-iviewer/blob/master/SUPPORT.md>`_
