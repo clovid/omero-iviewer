@@ -4,10 +4,124 @@
 .. image:: https://badge.fury.io/py/omero-iviewer.svg
     :target: https://badge.fury.io/py/omero-iviewer
 
-OMERO.iviewer
+OMERO.iviewer Clovid
 =============
 
-An OMERO.web app for visualizing images in OMERO.
+A **fork** of the OMERO.web app for visualizing images in OMERO.
+
+The main adaption that we did to the OMERO.iviewer was to provide the ability
+to make it integrable via an iframe-HTML-Element and to control relevant features
+(zooming, panning and manipulation of annotations) from the external application.
+
+Installation
+===================
+
+- Build dist files with ``npm run prod``
+- Copy dist files (``/omero-iviewer/plugin/omero_iviewer``) to OMERO packages: ``/opt/omero/web/venv3/lib/python3.6/site-packages/omero_iviewer_clovid``
+- Add viewer to OMERO apps: ``config append omero.web.apps '"omero_iviewer_clovid"'``
+
+Embedding
+=========
+
+To embed the adapted WSI viewer into other software, we use iframes:
+
+::
+
+    <iframe allow="fullscreen" width="100%" height="100%" style="border: 0;" src="https://omero.clovid.org/iviewer_clovid/?[GET params]"></iframe>
+
+Relevant GET params:
+
+- ``images=[WSI id]``: the image to show
+- ``ROI_HIDDEN_ON_INIT=true``: to prevent flickering
+- ``server=1``: needed for auto-login when showing protected images
+- ``bsession=[session]``: needed for auto-login when showing protected images
+
+Communcation via JavaScript
+---------------------------
+
+To communicate with the viewer we use JavaScript messages. A minimal working example:
+
+::
+
+    let iViewerWindow;
+    let iViewerId;
+    // Important: replace * with specific target in production
+    const targetOrigin = '*';
+    const messageContext = 'clovid_integration'; // shared "secret"
+    window.addEventListener('message', event => {
+        if (!event.data || !event.data.context || event.data.context !== messageContext) {
+            return;
+        }
+        const omeroMessage = event.data
+        if (omeroMessage.type === 'event') {
+            switch (omeroMessage.name) {
+            case 'handshake':
+                iViewerWindow = event.source;
+                iViewerId = omeroMessage.params.iviewerid;
+                sendEvent('initialized');
+                break;
+            case 'VIEWER_INITIALIZED':
+                sendAction('prepare');
+                break;
+            }
+        }
+    })
+
+
+    function sendEvent(name, payload) {
+        sendMessage('event', name, payload);
+    }
+
+    function sendAction(name, payload) {
+        sendMessage('action', name, payload);
+    }
+
+    function sendMessage(type, name, payload) {
+        if (!iViewerWindow) {
+            return;
+        }
+        iViewerWindow.postMessage(
+            {
+                context: messageContext,
+                target: iViewerId,
+                type,
+                name,
+                payload
+            },
+            targetOrigin
+        );
+    }
+
+Session token
+-------------
+
+For direct access to protected WSI we need to generate a session token beforehand and provide this in the iframe url. We can create a new session via the OMERO API:
+
+1. ``GET /api/v0/token``
+2. ``POST /api/v0/login/``
+    - Header: ``Content-type: multipart/form-data``
+    - Body:
+        - ``username: [omero user]``
+        - ``password: [omero user password]``
+        - ``server: 1``
+        - ``csrfmiddlewaretoken: [data from /token request]``
+
+
+API
+=============
+
+See `index.html of integration example <https://github.com/clovid/integration-example/blob/main/index.html>` for a list of all possible actions and event handling.
+
+Example integration
+===================
+
+See `integration example <https://github.com/clovid/integration-example>`_ to see an fully working example how this adapted WSI viewer can be used.
+
+
+########################################
+## Below you find the original README ##
+########################################
+
 
 Also see `SUPPORT.md <https://github.com/ome/omero-iviewer/blob/master/SUPPORT.md>`_
 
@@ -73,17 +187,17 @@ If you wish to set a threshold for iviewer that is *lower* than for the server:
 NB: Z-projection is not supported for tiled images in OMERO
 (Images larger than 2048 * 2048 pixels per plane are tiled in iviewer).
 
-OMERO uses Spectrum Color Picker for selecting ROI colors. 
+OMERO uses Spectrum Color Picker for selecting ROI colors.
 The roi_color_palette option allows you to specify a grid of colors for users to choose for ROIs.
-Define rows with brackets, and use commas to separate values. By default, only the first color of each row is shown. 
+Define rows with brackets, and use commas to separate values. By default, only the first color of each row is shown.
 A full grid is shown when the default color picker is hidden (see below)
 To define a color palette use::
-    
+
     $ omero config set omero.web.iviewer.roi_color_palette "[rgb(0,255,0)],[darkred,red,pink],[#0000FF]"
-  
+
 To hide the default color picker (and show a grid for the color palette), set show_palette_only to true
 You must define a palette and each row can display 4 colors::
-    
+
     $ omero config set omero.web.iviewer.show_palette_only true
 
 Known issues
