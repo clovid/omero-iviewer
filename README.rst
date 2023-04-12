@@ -121,6 +121,8 @@ See `integration example <https://github.com/clovid/integration-example>`_ to se
 
     Info: Below you find the original README
 
+OMERO.iviewer
+=============
 
 Also see `SUPPORT.md <https://github.com/ome/omero-iviewer/blob/master/SUPPORT.md>`_
 
